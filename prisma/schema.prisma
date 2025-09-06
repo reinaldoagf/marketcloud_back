@@ -10,6 +10,252 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+//
+// ENUMS
+//
+enum PurchaseStatus {
+  pending
+  paid
+  expired
+}
+
+enum UserStatus {
+  active
+  inactive
+}
+
+enum UnitMeasurement {
+  liters
+  kilograms
+}
+
+enum ProductStatus {
+  active
+  inactive
+  review
+}
+
+enum PermissionType {
+  view
+  delete
+  update
+}
+
+//
+// MODELOS
+//
+model Purchase {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  businessId Int
+  business   Business  @relation(fields: [businessId], references: [id])
+  amount     Float
+  status     PurchaseStatus
+}
+
+model Role {
+  id          Int          @id @default(autoincrement())
+  key         String       @unique
+  name        String
+  createdAt   DateTime     @default(now())
+  users       User[]
+  permissions RolePermission[]
+  pages       RolePage[]
+}
+
+model Permission {
+  id    Int              @id @default(autoincrement())
+  type  PermissionType
+  roles RolePermission[]
+}
+
+// tabla puente Role ↔ Permission
+model RolePermission {
+  roleId       Int
+  permissionId Int
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
+
+// tabla para páginas de un rol
+model RolePage {
+  id     Int   @id @default(autoincrement())
+  page   String
+  roleId Int
+  role   Role  @relation(fields: [roleId], references: [id])
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  avatar    String?
+  name      String
+  email     String    @unique
+  status    UserStatus
+  createdAt DateTime  @default(now())
+
+  roleId    Int?
+  role      Role?     @relation(fields: [roleId], references: [id])
+
+  businessId Int?
+  // Relación opcional con Business
+  business Business? @relation("BusinessOwner")
+
+  // relaciones
+  createdPendings Pending[] @relation("CreatedBy")
+  linkedPendings  Pending[] @relation("LinkedUser")
+
+  collaborators   BusinessBranchCollaborator[]
+  clients         BusinessBranchClient[]
+  suppliers       BusinessBranchSupplier[]
+  purchases       BusinessBranchPurchase[]
+}
+
+model ProductBrand {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model ProductCategory {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id              Int                  @id @default(autoincrement())
+  name            String
+  it_has_flavor   Boolean? 
+  unit_measurement UnitMeasurement?
+  categoryId      Int?
+  category        ProductCategory?     @relation(fields: [categoryId], references: [id])
+  brandId         Int?
+  brand           ProductBrand?        @relation(fields: [brandId], references: [id])
+  presentations   ProductPresentation[]
+  status          ProductStatus?
+  createdAt       DateTime             @default(now())
+  tags            ProductTag[]
+}
+
+model ProductPresentation {
+  id                   Int       @id @default(autoincrement())
+  productId            Int?
+  product              Product?  @relation(fields: [productId], references: [id])
+  flavor               String?
+  description          String?
+  measurement_quantity Float
+  quantity             Int?
+  createdAt            DateTime  @default(now())
+}
+
+// tabla para tags de productos
+model ProductTag {
+  id        Int     @id @default(autoincrement())
+  tag       String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Pending {
+  id        Int       @id @default(autoincrement())
+  title     String
+  time      String
+  message   String
+  deadline  DateTime?
+  eventDate DateTime?
+  createdById Int?
+  createdBy  User?     @relation("CreatedBy", fields: [createdById], references: [id])
+  linkedUserId Int?
+  linkedUser  User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model SubscriptionPlan {
+  id                 Int       @id @default(autoincrement())
+  title              String
+  price              Float
+  quantity_products  Int?
+  quantity_branches  Int?
+  pro_functions      Boolean
+  createdAt          DateTime  @default(now())
+  businesses         Business[]
+}
+
+model Business {
+  id                        Int              @id @default(autoincrement())
+  rif                       String
+  logo                      String?
+  // Clave foránea hacia User
+  ownerId Int   @unique
+  owner   User  @relation("BusinessOwner", fields: [ownerId], references: [id])
+  name                      String
+  description               String
+  branches                  BusinessBranch[]
+  subscriptionPlanId        Int
+  subscription_plan         SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
+  expired_subscription_plan DateTime
+  createdAt                 DateTime         @default(now())
+  purchases                 Purchase[]
+
+  // relación 1:N con usuarios (empleados/miembros)
+  /* users User[] @relation("BusinessUsers") */
+}
+
+model BusinessBranch {
+  id        Int       @id @default(autoincrement())
+  businessId Int?
+  business  Business? @relation(fields: [businessId], references: [id])
+  address   String
+  phone     String
+  createdAt DateTime  @default(now())
+
+  collaborators BusinessBranchCollaborator[]
+  clients       BusinessBranchClient[]
+  suppliers     BusinessBranchSupplier[]
+}
+
+model BusinessBranchCollaborator {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  branchId  Int
+  user      User          @relation(fields: [userId], references: [id])
+  branch    BusinessBranch @relation(fields: [branchId], references: [id])
+  createdAt DateTime       @default(now())
+}
+
+model BusinessBranchClient {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  branchId  Int
+  user      User          @relation(fields: [userId], references: [id])
+  branch    BusinessBranch @relation(fields: [branchId], references: [id])
+  createdAt DateTime       @default(now())
+}
+
+model BusinessBranchSupplier {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  branchId  Int
+  user      User          @relation(fields: [userId], references: [id])
+  branch    BusinessBranch @relation(fields: [branchId], references: [id])
+  createdAt DateTime       @default(now())
+}
+
+model BusinessBranchPurchase {
+  id        Int       @id @default(autoincrement())
+  userId    Int?
+  user      User?     @relation(fields: [userId], references: [id])
+  clientName String?
+  clientCi   String?
+  amount    Float
+  status    PurchaseStatus
+  createdAt DateTime  @default(now())
 }
