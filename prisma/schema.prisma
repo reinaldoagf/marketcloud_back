@@ -98,7 +98,7 @@ model User {
   username  String    @unique
   dni       String?   @unique
   password  String    
-  status    UserStatus
+  status    UserStatus @default(active)
   createdAt DateTime  @default(now())
 
   roleId    Int?
