@@ -16,6 +16,8 @@ async function main(): Promise<void> {
   const usersData = Array.from({ length: 25 }).map((_, index) => ({
     email: `user${index + 1}@test.com`,
     name: `User ${index + 1}`,
+    username: `username${index + 1}`,
+    dni: `${index + 1}0000`,
     password: hashedPassword,
     status: 'active' as const, // tipado seguro
   }));

@@ -40,6 +40,8 @@ export class UsersService {
       where.OR = [
         { name: { contains: search } },
         { email: { contains: search } },
+        { username: { contains: search } },
+        { dni: { contains: search } },
       ];
     }
 
@@ -95,6 +97,8 @@ export class UsersService {
     const data: Prisma.UserCreateInput = {
       email: dto.email,
       name: dto.name,
+      username: dto.username,
+      dni: dto.dni,
       password: hashedPassword,
       status: dto.status,
     };
