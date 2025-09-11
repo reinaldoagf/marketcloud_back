@@ -1,13 +1,5 @@
 // src/modules/users/users.controller.ts
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Query,
-  ParseIntPipe
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, ParseIntPipe } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,7 +22,15 @@ export class UsersController {
     @Query('startDate') startDate = '',
     @Query('endDate') endDate = '',
   ): Promise<PaginatedUserResponseDto> {
-    return this.service.getByFilters(Number(page), Number(pageSize), search, status, dateKey, startDate, endDate);
+    return this.service.getByFilters(
+      Number(page),
+      Number(pageSize),
+      search,
+      status,
+      dateKey,
+      startDate,
+      endDate,
+    );
   }
 
   @Get('/:id')

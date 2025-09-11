@@ -82,8 +82,8 @@ CREATE TABLE `ProductCategory` (
 CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `it_has_flavor` BOOLEAN NULL,
-    `unit_measurement` ENUM('liters', 'kilograms') NULL,
+    `itHasFlavor` BOOLEAN NULL,
+    `unitMeasurement` ENUM('liters', 'kilograms') NULL,
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
     `status` ENUM('active', 'inactive', 'review') NULL,
@@ -98,7 +98,7 @@ CREATE TABLE `ProductPresentation` (
     `productId` INTEGER NULL,
     `flavor` VARCHAR(191) NULL,
     `description` VARCHAR(191) NULL,
-    `measurement_quantity` DOUBLE NOT NULL,
+    `measurementQuantity` DOUBLE NOT NULL,
     `quantity` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -134,9 +134,9 @@ CREATE TABLE `SubscriptionPlan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
-    `quantity_products` INTEGER NULL,
-    `quantity_branches` INTEGER NULL,
-    `pro_functions` BOOLEAN NOT NULL,
+    `quantityProducts` INTEGER NULL,
+    `quantityBranches` INTEGER NULL,
+    `proFunctions` BOOLEAN NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -151,7 +151,7 @@ CREATE TABLE `Business` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
     `subscriptionPlanId` INTEGER NOT NULL,
-    `expired_subscription_plan` DATETIME(3) NOT NULL,
+    `expiredSubscriptionPlan` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Business_ownerId_key`(`ownerId`),

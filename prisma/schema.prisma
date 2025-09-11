@@ -135,8 +135,8 @@ model ProductCategory {
 model Product {
   id              Int                  @id @default(autoincrement())
   name            String
-  it_has_flavor   Boolean? 
-  unit_measurement UnitMeasurement?
+  itHasFlavor     Boolean? 
+  unitMeasurement UnitMeasurement?
   categoryId      Int?
   category        ProductCategory?     @relation(fields: [categoryId], references: [id])
   brandId         Int?
@@ -153,7 +153,7 @@ model ProductPresentation {
   product              Product?  @relation(fields: [productId], references: [id])
   flavor               String?
   description          String?
-  measurement_quantity Float
+  measurementQuantity  Float
   quantity             Int?
   createdAt            DateTime  @default(now())
 }
@@ -184,16 +184,16 @@ model SubscriptionPlan {
   id                 Int       @id @default(autoincrement())
   title              String
   price              Float
-  quantity_products  Int?
-  quantity_branches  Int?
-  pro_functions      Boolean
+  quantityProducts   Int?
+  quantityBranches   Int?
+  proFunctions      Boolean
   createdAt          DateTime  @default(now())
   businesses         Business[]
 }
 
 model Business {
   id                        Int              @id @default(autoincrement())
-  rif                       String
+  rif                       String?
   logo                      String?
   // Clave foránea hacia User
   ownerId Int   @unique
@@ -201,9 +201,9 @@ model Business {
   name                      String
   description               String
   branches                  BusinessBranch[]
-  subscriptionPlanId        Int
-  subscription_plan         SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
-  expired_subscription_plan DateTime
+  subscriptionPlanId        Int?
+  subscriptionPlan          SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
+  expiredSubscriptionPlan   DateTime
   createdAt                 DateTime         @default(now())
   purchases                 Purchase[]
 
@@ -212,12 +212,12 @@ model Business {
 }
 
 model BusinessBranch {
-  id        Int       @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   businessId Int?
-  business  Business? @relation(fields: [businessId], references: [id])
-  address   String
-  phone     String
-  createdAt DateTime  @default(now())
+  business   Business? @relation(fields: [businessId], references: [id])
+  address    String
+  phone      String
+  createdAt  DateTime  @default(now())
 
   collaborators BusinessBranchCollaborator[]
   clients       BusinessBranchClient[]

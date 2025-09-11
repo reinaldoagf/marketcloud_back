@@ -22,7 +22,7 @@ const SELECT_FIELDS = {
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
- async getByFilters(
+  async getByFilters(
     page = 1,
     pageSize = 10,
     search = '',
