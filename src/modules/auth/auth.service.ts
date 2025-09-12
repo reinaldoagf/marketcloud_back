@@ -54,7 +54,7 @@ export class AuthService {
     if (!isMatch) return null;
 
     // devolver sin password
-    const { password, ...userSafe } = user;
+    const { ...userSafe } = user;
     return userSafe;
   }
 
@@ -67,6 +67,15 @@ export class AuthService {
             branches: true, // Trae todos los branches del business
           },
         },
+        collaborations: {
+          include: {
+            branch: {
+              include: {
+                business: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!user) throw new UnauthorizedException('Invalid credentials');
@@ -74,7 +83,7 @@ export class AuthService {
     const isMatch = await bcrypt.compare(dto.password, user.password);
     if (!isMatch) throw new UnauthorizedException('Invalid credentials');
 
-    const userSafe = (({ password, ...rest }) => rest)(user);
+    const userSafe = (({ ...rest }) => rest)(user);
 
     const token = this.signToken(user.id, user.email);
     return { access_token: token, user: userSafe };

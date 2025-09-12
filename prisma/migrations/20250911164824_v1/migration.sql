@@ -51,12 +51,17 @@ CREATE TABLE `User` (
     `avatar` VARCHAR(191) NULL,
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `status` ENUM('active', 'inactive') NOT NULL,
+    `username` VARCHAR(191) NOT NULL,
+    `dni` VARCHAR(191) NULL,
+    `password` VARCHAR(191) NOT NULL,
+    `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `roleId` INTEGER NULL,
     `businessId` INTEGER NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
+    UNIQUE INDEX `User_username_key`(`username`),
+    UNIQUE INDEX `User_dni_key`(`dni`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -145,12 +150,12 @@ CREATE TABLE `SubscriptionPlan` (
 -- CreateTable
 CREATE TABLE `Business` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `rif` VARCHAR(191) NOT NULL,
+    `rif` VARCHAR(191) NULL,
     `logo` VARCHAR(191) NULL,
     `ownerId` INTEGER NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
-    `subscriptionPlanId` INTEGER NOT NULL,
+    `subscriptionPlanId` INTEGER NULL,
     `expiredSubscriptionPlan` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -174,6 +179,7 @@ CREATE TABLE `BusinessBranchCollaborator` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `branchId` INTEGER NOT NULL,
+    `isAdmin` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -249,7 +255,7 @@ ALTER TABLE `Pending` ADD CONSTRAINT `Pending_linkedUserId_fkey` FOREIGN KEY (`l
 ALTER TABLE `Business` ADD CONSTRAINT `Business_ownerId_fkey` FOREIGN KEY (`ownerId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Business` ADD CONSTRAINT `Business_subscriptionPlanId_fkey` FOREIGN KEY (`subscriptionPlanId`) REFERENCES `SubscriptionPlan`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Business` ADD CONSTRAINT `Business_subscriptionPlanId_fkey` FOREIGN KEY (`subscriptionPlanId`) REFERENCES `SubscriptionPlan`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `BusinessBranch` ADD CONSTRAINT `BusinessBranch_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

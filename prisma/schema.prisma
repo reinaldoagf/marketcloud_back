@@ -112,7 +112,7 @@ model User {
   createdPendings Pending[] @relation("CreatedBy")
   linkedPendings  Pending[] @relation("LinkedUser")
 
-  collaborators   BusinessBranchCollaborator[]
+  collaborations  BusinessBranchCollaborator[]
   clients         BusinessBranchClient[]
   suppliers       BusinessBranchSupplier[]
   purchases       BusinessBranchPurchase[]
@@ -212,13 +212,12 @@ model Business {
 }
 
 model BusinessBranch {
-  id         Int       @id @default(autoincrement())
-  businessId Int?
-  business   Business? @relation(fields: [businessId], references: [id])
-  address    String
-  phone      String
-  createdAt  DateTime  @default(now())
-
+  id            Int       @id @default(autoincrement())
+  businessId    Int?
+  business      Business? @relation(fields: [businessId], references: [id])
+  address       String
+  phone         String
+  createdAt     DateTime  @default(now())
   collaborators BusinessBranchCollaborator[]
   clients       BusinessBranchClient[]
   suppliers     BusinessBranchSupplier[]
@@ -228,8 +227,9 @@ model BusinessBranchCollaborator {
   id        Int           @id @default(autoincrement())
   userId    Int
   branchId  Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
   branch    BusinessBranch @relation(fields: [branchId], references: [id])
+  isAdmin   Boolean        @default(false)
   createdAt DateTime       @default(now())
 }
 
@@ -237,7 +237,7 @@ model BusinessBranchClient {
   id        Int           @id @default(autoincrement())
   userId    Int
   branchId  Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
   branch    BusinessBranch @relation(fields: [branchId], references: [id])
   createdAt DateTime       @default(now())
 }
@@ -246,7 +246,7 @@ model BusinessBranchSupplier {
   id        Int           @id @default(autoincrement())
   userId    Int
   branchId  Int
-  user      User          @relation(fields: [userId], references: [id])
+  user      User           @relation(fields: [userId], references: [id])
   branch    BusinessBranch @relation(fields: [branchId], references: [id])
   createdAt DateTime       @default(now())
 }
