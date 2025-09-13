@@ -9,6 +9,7 @@ import { PaginatedCollaboratorResponseDto } from './dto/paginated-collaborator-r
 export class CollaboratorsService {
   constructor(private prisma: PrismaService) {}
   async getByFilters(
+    businessId: number | string = '',
     page = 1,
     pageSize = 10,
     search = '',
@@ -20,6 +21,14 @@ export class CollaboratorsService {
     const skip = (page - 1) * pageSize;
 
     const where: Prisma.BusinessBranchCollaboratorWhereInput = {};
+
+    // 🔹 Filtro por businessId si existe
+    if (businessId !== '') {
+      const branchFilter: Prisma.BusinessBranchWhereInput = {
+        businessId: businessId, // o businessId: { equals: businessId }
+      };
+      where.branch = branchFilter;
+    }
 
     if (search) {
       where.OR = [

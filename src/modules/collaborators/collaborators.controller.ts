@@ -9,6 +9,7 @@ export class CollaboratorsController {
   constructor(private readonly service: CollaboratorsService) {}
   @Get('/')
   async getByFilters(
+    @Query('businessId', ParseIntPipe) businessId = null,
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -18,6 +19,7 @@ export class CollaboratorsController {
     @Query('endDate') endDate = '',
   ): Promise<PaginatedCollaboratorResponseDto> {
     return this.service.getByFilters(
+      businessId,
       Number(page),
       Number(pageSize),
       search,
