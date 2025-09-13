@@ -91,22 +91,26 @@ model RolePage {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        Int             @id @default(autoincrement())
   avatar    String?
   name      String
-  email     String    @unique
-  username  String    @unique
-  dni       String?   @unique
+  email     String          @unique
+  username  String          @unique
+  dni       String?         @unique
   password  String    
-  status    UserStatus @default(active)
-  createdAt DateTime  @default(now())
+  status    UserStatus      @default(active)
+  createdAt DateTime        @default(now())
 
   roleId    Int?
-  role      Role?     @relation(fields: [roleId], references: [id])
+  role      Role?           @relation(fields: [roleId], references: [id])
+
+  country       String      @default("venezuela")
+  state         String
+  city          String
 
   businessId Int?
   // Relación opcional con Business
-  business Business? @relation("BusinessOwner")
+  business Business?        @relation("BusinessOwner")
 
   // relaciones
   createdPendings Pending[] @relation("CreatedBy")
@@ -196,14 +200,15 @@ model Business {
   rif                       String?
   logo                      String?
   // Clave foránea hacia User
-  ownerId Int   @unique
-  owner   User  @relation("BusinessOwner", fields: [ownerId], references: [id])
+  ownerId                   Int   @unique
+  owner                     User  @relation("BusinessOwner", fields: [ownerId], references: [id])
   name                      String
   description               String
   branches                  BusinessBranch[]
   subscriptionPlanId        Int?
   subscriptionPlan          SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
-  expiredSubscriptionPlan   DateTime
+  subscriptionDate          DateTime
+  expirationDate            DateTime
   createdAt                 DateTime         @default(now())
   purchases                 Purchase[]
 
@@ -215,6 +220,9 @@ model BusinessBranch {
   id            Int       @id @default(autoincrement())
   businessId    Int?
   business      Business? @relation(fields: [businessId], references: [id])
+  country       String    @default("venezuela")
+  state         String
+  city          String
   address       String
   phone         String
   createdAt     DateTime  @default(now())

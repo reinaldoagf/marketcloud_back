@@ -13,7 +13,7 @@ export class BusinessController {
   async create(@Body() body: CreateBusinessDto, @UploadedFile() file?: Express.Multer.File) {
     const ownerId = Number(body.ownerId);
 
-    let branches: { address: string; phone: string }[] = [];
+    let branches: { country: string; state: string; city: string; address: string; phone: string }[] = [];
     if (body.branches) {
       try {
         branches = JSON.parse(body.branches) || [];

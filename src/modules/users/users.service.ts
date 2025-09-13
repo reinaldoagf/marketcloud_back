@@ -15,6 +15,9 @@ const SELECT_FIELDS = {
   status: true,
   createdAt: true,
   roleId: true,
+  country: true,
+  state: true,
+  city: true,
   businessId: true,
 };
 
@@ -99,6 +102,9 @@ export class UsersService {
       name: dto.name,
       username: dto.username,
       dni: dto.dni,
+      country: dto.country,
+      state: dto.state,
+      city: dto.city,
       password: hashedPassword,
       status: dto.status,
     };

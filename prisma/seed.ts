@@ -19,6 +19,8 @@ async function main(): Promise<void> {
     name: `User ${index + 1}`,
     username: `username${index + 1}`,
     dni: `${index + 1}0000`,
+    state: `estado bolívar`,
+    city: `ciudad guayana`,
     password: hashedPassword,
     status: UserStatus.active,
   }));
@@ -35,6 +37,8 @@ async function main(): Promise<void> {
         name: 'Reinaldo González',
         username: 'reinaldoagf',
         dni: '0000000',
+        state: `estado bolívar`,
+        city: `ciudad guayana`,
         password: hashedPassword,
         status: UserStatus.active,
       },

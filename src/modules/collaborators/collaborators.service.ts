@@ -5,16 +5,6 @@ import { Prisma } from '@prisma/client';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { PaginatedCollaboratorResponseDto } from './dto/paginated-collaborator-response.dto';
 
-const SELECT_FIELDS = {
-  id: true,
-  name: true,
-  email: true,
-  status: true,
-  createdAt: true,
-  roleId: true,
-  businessId: true,
-};
-
 @Injectable()
 export class CollaboratorsService {
   constructor(private prisma: PrismaService) {}
@@ -37,6 +27,9 @@ export class CollaboratorsService {
         { user: { email: { contains: search } } },
         { user: { username: { contains: search } } },
         { user: { dni: { contains: search } } },
+        { branch: { country: { contains: search } } },
+        { branch: { state: { contains: search } } },
+        { branch: { city: { contains: search } } },
         { branch: { address: { contains: search } } },
       ];
     }
@@ -72,12 +65,18 @@ export class CollaboratorsService {
               status: true,
               createdAt: true,
               roleId: true,
+              country: true,
+              state: true,
+              city: true,
               businessId: true,
             },
           },
           branch: {
             select: {
               id: true,
+              country: true,
+              state: true,
+              city: true,
               address: true,
             },
           },

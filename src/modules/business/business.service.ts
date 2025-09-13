@@ -7,7 +7,7 @@ interface CreateBusinessInput {
   rif?: string;
   description?: string;
   ownerId: number;
-  branches: { address: string; phone: string }[];
+  branches: { country: string; state: string; city: string; address: string; phone: string }[];
   logo?: string | null;
 }
 
@@ -37,9 +37,13 @@ export class BusinessService {
           description: input.description || '',
           logo: input.logo,
           ownerId: input.ownerId,
-          expiredSubscriptionPlan: expiredDate,
+          subscriptionDate: new Date(),
+          expirationDate: expiredDate,
           branches: {
             create: input.branches.map((b) => ({
+              country: b.country,
+              state: b.state,
+              city: b.city,
               address: b.address,
               phone: b.phone,
             })),

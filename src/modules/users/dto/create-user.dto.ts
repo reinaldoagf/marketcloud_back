@@ -19,6 +19,18 @@ export class CreateUserDto {
   @Length(6, 20, { message: 'El DNI debe tener entre 6 y 20 caracteres' })
   dni: string;
 
+  @IsString()
+  @IsNotEmpty()
+  country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  state: string;
+
+  @IsString()
+  @IsNotEmpty()
+  city: string;
+
   @ApiProperty()
   @IsString()
   @MinLength(8)

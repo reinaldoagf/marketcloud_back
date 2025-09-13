@@ -7,6 +7,9 @@ export class CollaboratorResponseDto {
   user: UserResponseDto;
   branch: {
     id: number;
+    country: string;
+    state: string;
+    city: string;
     address: string;
   };
   createdAt: Date;

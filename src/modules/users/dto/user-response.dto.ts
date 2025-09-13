@@ -8,5 +8,8 @@ export class UserResponseDto {
   status: UserStatus;
   createdAt: Date;
   roleId: number | null;
+  country: string | null;
+  state: string | null;
+  city: string | null;
   businessId: number | null;
 }

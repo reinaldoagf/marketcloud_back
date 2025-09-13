@@ -19,6 +19,9 @@ export class AuthService {
     email: true,
     status: true,
     createdAt: true,
+    country: true,
+    state: true,
+    city: true,
     roleId: true,
     businessId: true,
     avatar: true,
@@ -36,6 +39,9 @@ export class AuthService {
       name: dto.name,
       username: dto.username,
       dni: dto.dni,
+      country: dto.country,
+      city: dto.city,
+      state: dto.state,
       password: hashed,
       status: 'active', // o venir en dto si lo deseas
     };

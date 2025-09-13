@@ -57,6 +57,9 @@ CREATE TABLE `User` (
     `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `roleId` INTEGER NULL,
+    `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
+    `state` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NOT NULL,
     `businessId` INTEGER NULL,
 
     UNIQUE INDEX `User_email_key`(`email`),
@@ -156,7 +159,8 @@ CREATE TABLE `Business` (
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
     `subscriptionPlanId` INTEGER NULL,
-    `expiredSubscriptionPlan` DATETIME(3) NOT NULL,
+    `subscriptionDate` DATETIME(3) NOT NULL,
+    `expirationDate` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Business_ownerId_key`(`ownerId`),
@@ -167,6 +171,9 @@ CREATE TABLE `Business` (
 CREATE TABLE `BusinessBranch` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `businessId` INTEGER NULL,
+    `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
+    `state` VARCHAR(191) NOT NULL,
+    `city` VARCHAR(191) NOT NULL,
     `address` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
