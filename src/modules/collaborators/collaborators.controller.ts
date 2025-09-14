@@ -1,5 +1,5 @@
 // src/collaborators/collaborators.controller.ts
-import { Controller, Get, Post, Body, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
 import { CollaboratorsService } from './collaborators.service';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { PaginatedCollaboratorResponseDto } from './dto/paginated-collaborator-response.dto';
@@ -32,5 +32,9 @@ export class CollaboratorsController {
   @Post()
   async create(@Body() dto: CreateCollaboratorDto) {
     return this.service.addCollaborator(dto);
+  }
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.deleteCollaborator(id);
   }
 }

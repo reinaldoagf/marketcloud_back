@@ -72,6 +72,7 @@ export class CollaboratorsService {
               name: true,
               email: true,
               status: true,
+              avatar: true,
               createdAt: true,
               roleId: true,
               country: true,
@@ -144,6 +145,21 @@ export class CollaboratorsService {
         userId: dto.userId,
         isAdmin: dto.isAdmin ?? false,
       },
+    });
+  }
+
+  async deleteCollaborator(id: number) {
+    // Verificar si existe antes de eliminar
+    const collaborator = await this.prisma.businessBranchCollaborator.findUnique({
+      where: { id },
+    });
+
+    if (!collaborator) {
+      throw new NotFoundException(`Collaborator with ID ${id} not found`);
+    }
+
+    return this.prisma.businessBranchCollaborator.delete({
+      where: { id },
     });
   }
 }
