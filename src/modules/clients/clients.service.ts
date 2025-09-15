@@ -1,7 +1,8 @@
 // src/clients/clients.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { CreateClientDto } from './dto/create-client.dto';
 import { PaginatedClientResponseDto } from './dto/paginated-client-response.dto';
 
 @Injectable()
@@ -111,5 +112,52 @@ export class ClientsService {
       pageSize,
       totalPages: Math.ceil(total / pageSize),
     };
+  }
+
+  async addClient(dto: CreateClientDto) {
+    const branch = await this.prisma.businessBranch.findUnique({
+      where: { id: dto.branchId },
+      include: { business: true },
+    });
+
+    if (!branch) {
+      throw new NotFoundException('Branch not found');
+    }
+
+    // Validar que el colaborador no sea el owner
+    if (branch.business?.ownerId === dto.userId) {
+      throw new BadRequestException('Owner cannot be added as user');
+    }
+
+    // Validar si ya existe
+    const existing = await this.prisma.businessBranchClient.findFirst({
+      where: { branchId: dto.branchId, userId: dto.userId },
+    });
+
+    if (existing) {
+      throw new BadRequestException('Client is already a user of this branch');
+    }
+
+    // Crear el colaborador
+    return this.prisma.businessBranchClient.create({
+      data: {
+        branchId: dto.branchId,
+        userId: dto.userId,
+      },
+    });
+  }
+  async deleteClient(id: number) {
+    // Verificar si existe antes de eliminar
+    const client = await this.prisma.businessBranchClient.findUnique({
+      where: { id },
+    });
+
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+
+    return this.prisma.businessBranchClient.delete({
+      where: { id },
+    });
   }
 }

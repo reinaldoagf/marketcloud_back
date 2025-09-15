@@ -1,6 +1,7 @@
 // src/clients/clients.controller.ts
-import { Controller, Get, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
 import { ClientsService } from './clients.service';
+import { CreateClientDto } from './dto/create-client.dto';
 import { PaginatedClientResponseDto } from './dto/paginated-client-response.dto';
 
 @Controller('clients')
@@ -27,5 +28,13 @@ export class ClientsController {
       startDate,
       endDate,
     );
+  }
+  @Post()
+  async create(@Body() dto: CreateClientDto) {
+    return this.service.addClient(dto);
+  }
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.deleteClient(id);
   }
 }
