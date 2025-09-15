@@ -1,7 +1,7 @@
-// dto/collaborator-response.dto.ts
+// dto/client-response.dto.ts
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 
-export class CollaboratorResponseDto {
+export class ClientResponseDto {
   id: number;
   user: UserResponseDto;
   branch: {
