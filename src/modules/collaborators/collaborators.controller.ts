@@ -10,6 +10,7 @@ export class CollaboratorsController {
   @Get('/')
   async getByFilters(
     @Query('businessId', ParseIntPipe) businessId = null,
+    @Query('branchId', ParseIntPipe) branchId = null,
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -20,6 +21,7 @@ export class CollaboratorsController {
   ): Promise<PaginatedCollaboratorResponseDto> {
     return this.service.getByFilters(
       businessId,
+      branchId,
       Number(page),
       Number(pageSize),
       search,

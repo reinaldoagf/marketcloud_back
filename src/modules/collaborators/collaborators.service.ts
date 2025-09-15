@@ -10,6 +10,7 @@ export class CollaboratorsService {
   constructor(private prisma: PrismaService) {}
   async getByFilters(
     businessId?: number | null,
+    branchId?: number | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -23,7 +24,9 @@ export class CollaboratorsService {
     const where: Prisma.BusinessBranchCollaboratorWhereInput = {};
 
     // 🔹 Filtro por businessId si existe
-    if (businessId) {
+    if (branchId) {
+      where.branchId = branchId; // 👈 ya existe como campo directo en BusinessBranchCollaborator
+    } else if (businessId) {
       const branchFilter: Prisma.BusinessBranchWhereInput = {
         businessId: { equals: businessId },
       };
