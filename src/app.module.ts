@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { BusinessModule } from './modules/business/business.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
+import { SuppliersModule } from './modules/suppliers/suppliers.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { CollaboratorsModule } from './modules/collaborators/collaborators.modul
     BusinessModule,
     ClientsModule,
     CollaboratorsModule,
+    SuppliersModule,
     PrismaModule, // Aquí importamos el módulo global
   ],
   controllers: [],
