@@ -1,6 +1,8 @@
 // src/business/business.controller.ts
 import { Controller, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 import { CreateBusinessDto } from './dto/create-business.dto';
 import { BusinessService } from './business.service';
 
@@ -9,7 +11,17 @@ export class BusinessController {
   constructor(private readonly businessService: BusinessService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('logo')) // opcional, si envías archivo "logo"
+  @UseInterceptors(
+    FileInterceptor('logo', {
+      storage: diskStorage({
+        destination: './uploads/logos', // 📂 carpeta donde se guardan
+        filename: (req, file, cb) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
+        },
+      }),
+    }),
+  ) // opcional, si envías archivo "logo"
   async create(@Body() body: CreateBusinessDto, @UploadedFile() file?: Express.Multer.File) {
     const ownerId = Number(body.ownerId);
 
