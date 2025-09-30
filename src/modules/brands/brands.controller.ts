@@ -1,8 +1,9 @@
 // src/modules/brands/brands.controller.ts
-import { Controller, Get, Post, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
+import { UpdateBrandDto } from './dto/update-brand.dto';
 import { PaginatedBrandResponseDto } from './dto/paginated-brand-response.dto';
 
 @ApiTags('brands')
@@ -31,6 +32,10 @@ export class BrandsController {
   @Post()
   async create(@Body() dto: CreateBrandDto) {
     return this.service.addBrand(dto);
+  }
+  @Put(':id')
+  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateBrandDto) {
+    return this.service.updateBrand(id, dto);
   }
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {

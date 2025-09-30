@@ -3,6 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateBrandDto } from './dto/create-brand.dto';
+import { UpdateBrandDto } from './dto/update-brand.dto';
 import { PaginatedBrandResponseDto } from './dto/paginated-brand-response.dto';
 
 const SELECT_FIELDS = {
@@ -72,6 +73,21 @@ export class BrandsService {
     return this.prisma.productBrand.create({
       data: {
         name: dto.name,
+      },
+    });
+  }
+
+  async updateBrand(id: number, dto: UpdateBrandDto) {
+    const brand = await this.prisma.productBrand.findUnique({ where: { id } });
+
+    if (!brand) {
+      throw new NotFoundException(`Brand with ID ${id} not found`);
+    }
+
+    return this.prisma.productBrand.update({
+      where: { id },
+      data: {
+        name: dto.name ?? brand.name,
       },
     });
   }
