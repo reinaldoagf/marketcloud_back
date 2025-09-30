@@ -1,5 +1,14 @@
 // src/business/business.controller.ts
-import { Controller, Post, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+  Delete,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
@@ -8,7 +17,7 @@ import { BusinessService } from './business.service';
 
 @Controller('business')
 export class BusinessController {
-  constructor(private readonly businessService: BusinessService) {}
+  constructor(private readonly service: BusinessService) {}
 
   @Post()
   @UseInterceptors(
@@ -25,7 +34,13 @@ export class BusinessController {
   async create(@Body() body: CreateBusinessDto, @UploadedFile() file?: Express.Multer.File) {
     const ownerId = Number(body.ownerId);
 
-    let branches: { country: string; state: string; city: string; address: string; phone: string }[] = [];
+    let branches: {
+      country: string;
+      state: string;
+      city: string;
+      address: string;
+      phone: string;
+    }[] = [];
     if (body.branches) {
       try {
         branches = JSON.parse(body.branches) || [];
@@ -34,7 +49,7 @@ export class BusinessController {
       }
     }
 
-    return this.businessService.create({
+    return this.service.create({
       name: body.name,
       rif: body.rif,
       description: body.description ?? '',
@@ -42,5 +57,9 @@ export class BusinessController {
       branches,
       logo: file ? file.filename : null,
     });
+  }
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.delete(id);
   }
 }

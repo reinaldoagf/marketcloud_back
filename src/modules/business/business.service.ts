@@ -58,4 +58,38 @@ export class BusinessService {
       throw new BadRequestException(`Error creating business: ${err.message}`);
     }
   }
+
+  async delete(id: number) {
+    // Verificar si existe antes de eliminar
+    const business = await this.prisma.business.findUnique({ where: { id } });
+
+    if (!business) {
+      throw new NotFoundException(`Business with ID ${id} not found`);
+    }
+
+    // 🔹 Buscar todos los branches asociados al negocio
+    const branches = await this.prisma.businessBranch.findMany({
+      where: { businessId: id },
+      select: { id: true },
+    });
+
+    const branchIds = branches.map((b) => b.id);
+
+    // 🔹 Si existen dependencias (ejemplo: pendings ligados a branchId), borrarlas primero
+    if (branchIds.length > 0) {
+      await this.prisma.pending.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+    }
+
+    // 🔹 Luego borrar los branches
+    await this.prisma.businessBranch.deleteMany({
+      where: { businessId: id },
+    });
+
+    // 🔹 Finalmente borrar el business
+    return this.prisma.business.delete({
+      where: { id },
+    });
+  }
 }
