@@ -171,17 +171,20 @@ model ProductTag {
 }
 
 model Pending {
-  id        Int       @id @default(autoincrement())
-  title     String
-  time      String
-  message   String
-  deadline  DateTime?
-  eventDate DateTime?
-  createdById Int?
-  createdBy  User?     @relation("CreatedBy", fields: [createdById], references: [id])
-  linkedUserId Int?
-  linkedUser  User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
-  createdAt DateTime  @default(now())
+  id            Int       @id @default(autoincrement())
+  title         String
+  message       String
+  deadline      DateTime?
+  eventDate     DateTime?
+  businessId    Int
+  business      Business @relation(fields: [businessId], references: [id])
+  branchId      Int
+  branch        BusinessBranch @relation(fields: [branchId], references: [id])
+  createdById   Int?
+  createdBy     User?     @relation("CreatedBy", fields: [createdById], references: [id])
+  linkedUserId  Int?
+  linkedUser    User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  createdAt     DateTime  @default(now())
 }
 
 model SubscriptionPlan {
@@ -211,6 +214,7 @@ model Business {
   expirationDate            DateTime
   createdAt                 DateTime         @default(now())
   purchases                 Purchase[]
+  pendings                  Pending[]
 
   // relación 1:N con usuarios (empleados/miembros)
   /* users User[] @relation("BusinessUsers") */
@@ -229,6 +233,7 @@ model BusinessBranch {
   collaborators BusinessBranchCollaborator[]
   clients       BusinessBranchClient[]
   suppliers     BusinessBranchSupplier[]
+  pendings      Pending[]
 }
 
 model BusinessBranchCollaborator {

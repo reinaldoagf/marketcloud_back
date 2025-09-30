@@ -126,10 +126,11 @@ CREATE TABLE `ProductTag` (
 CREATE TABLE `Pending` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
-    `time` VARCHAR(191) NOT NULL,
     `message` VARCHAR(191) NOT NULL,
     `deadline` DATETIME(3) NULL,
     `eventDate` DATETIME(3) NULL,
+    `businessId` INTEGER NOT NULL,
+    `branchId` INTEGER NOT NULL,
     `createdById` INTEGER NULL,
     `linkedUserId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -251,6 +252,12 @@ ALTER TABLE `ProductPresentation` ADD CONSTRAINT `ProductPresentation_productId_
 
 -- AddForeignKey
 ALTER TABLE `ProductTag` ADD CONSTRAINT `ProductTag_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pending` ADD CONSTRAINT `Pending_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Pending` ADD CONSTRAINT `Pending_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pending` ADD CONSTRAINT `Pending_createdById_fkey` FOREIGN KEY (`createdById`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
