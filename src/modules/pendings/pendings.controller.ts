@@ -1,5 +1,5 @@
 // src/pendings/pendings.controller.ts
-import { Controller, Get, Post, Body, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
 import { PendingsService } from './pendings.service';
 import { CreatePendingDto } from './dto/create-pending.dto';
 import { PaginatedPendingResponseDto } from './dto/paginated-pending-response.dto';
@@ -34,5 +34,9 @@ export class PendingsController {
   @Post()
   async create(@Body() dto: CreatePendingDto) {
     return this.service.addPending(dto);
+  }
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.deletePending(id);
   }
 }

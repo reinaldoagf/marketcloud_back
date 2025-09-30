@@ -1,5 +1,5 @@
 // src/pendings/pendings.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { PaginatedPendingResponseDto } from './dto/paginated-pending-response.dto';
@@ -146,6 +146,21 @@ export class PendingsService {
         branchId: dto.branchId,
         eventDate: dto.eventDate ? new Date(dto.eventDate) : null,
       },
+    });
+  }
+
+  async deletePending(id: number) {
+    // Verificar si existe antes de eliminar
+    const client = await this.prisma.pending.findUnique({
+      where: { id },
+    });
+
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${id} not found`);
+    }
+
+    return this.prisma.pending.delete({
+      where: { id },
     });
   }
 }
