@@ -174,7 +174,6 @@ model Pending {
   id            Int       @id @default(autoincrement())
   title         String
   message       String
-  deadline      DateTime?
   eventDate     DateTime?
   businessId    Int
   business      Business @relation(fields: [businessId], references: [id])

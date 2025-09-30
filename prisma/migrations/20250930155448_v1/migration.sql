@@ -127,7 +127,6 @@ CREATE TABLE `Pending` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
     `message` VARCHAR(191) NOT NULL,
-    `deadline` DATETIME(3) NULL,
     `eventDate` DATETIME(3) NULL,
     `businessId` INTEGER NOT NULL,
     `branchId` INTEGER NOT NULL,

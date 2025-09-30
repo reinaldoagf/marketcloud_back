@@ -118,6 +118,7 @@ export class PendingsService {
       id: c.id,
       title: c.title,
       message: c.message,
+      eventDate: c.eventDate,
       createdBy: c.createdBy,
       linkedUser: c.linkedUser,
       branch: c.branch,
@@ -139,8 +140,11 @@ export class PendingsService {
       data: {
         title: dto.title,
         message: dto.message,
+        createdById: dto.createdById,
+        linkedUserId: dto.linkedUserId,
         businessId: dto.businessId,
         branchId: dto.branchId,
+        eventDate: dto.eventDate ? new Date(dto.eventDate) : null,
       },
     });
   }

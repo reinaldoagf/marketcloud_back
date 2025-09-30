@@ -1,5 +1,5 @@
 // create-pending.dto.ts
-import { IsInt, IsString, IsNotEmpty, Length } from 'class-validator';
+import { IsInt, IsString, IsNotEmpty, Length, IsOptional, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePendingDto {
@@ -14,10 +14,24 @@ export class CreatePendingDto {
   message: string;
 
   @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
+  @Type(() => Number)
   businessId: number;
 
   @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
+  @Type(() => Number)
   branchId: number;
+
+  @IsInt()
+  @Type(() => Number)
+  createdById: number;
+
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  linkedUserId: number;
+
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  eventDate?: Date;
 }

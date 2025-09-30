@@ -7,6 +7,7 @@ export class PendingResponseDto {
   message: string;
   createdBy: UserResponseDto | null;
   linkedUser: UserResponseDto | null;
+  eventDate: Date | null;
   branch: {
     id: number;
     country: string;
