@@ -1,5 +1,5 @@
 // src/modules/brands/brands.service.ts
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -73,6 +73,20 @@ export class BrandsService {
       data: {
         name: dto.name,
       },
+    });
+  }
+  async deleteBrand(id: number) {
+    // Verificar si existe antes de eliminar
+    const brand = await this.prisma.productBrand.findUnique({
+      where: { id },
+    });
+
+    if (!brand) {
+      throw new NotFoundException(`Brand with ID ${id} not found`);
+    }
+
+    return this.prisma.productBrand.delete({
+      where: { id },
     });
   }
 }

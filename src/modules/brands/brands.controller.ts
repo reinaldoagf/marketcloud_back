@@ -1,5 +1,5 @@
 // src/modules/brands/brands.controller.ts
-import { Controller, Get, Post, Body, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
@@ -31,5 +31,9 @@ export class BrandsController {
   @Post()
   async create(@Body() dto: CreateBrandDto) {
     return this.service.addBrand(dto);
+  }
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return this.service.deleteBrand(id);
   }
 }
