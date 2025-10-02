@@ -9,10 +9,12 @@ import { CollaboratorsModule } from './modules/collaborators/collaborators.modul
 import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { PendingsModule } from './modules/pendings/pendings.module';
 import { BrandsModule } from './modules/brands/brands.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
     AuthModule,
     UsersModule,
     BusinessModule,
@@ -21,7 +23,7 @@ import { BrandsModule } from './modules/brands/brands.module';
     SuppliersModule,
     PendingsModule,
     BrandsModule,
-    PrismaModule, // Aquí importamos el módulo global
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],
