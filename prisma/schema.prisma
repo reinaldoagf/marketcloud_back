@@ -146,7 +146,7 @@ model Product {
   brandId         Int?
   brand           ProductBrand?        @relation(fields: [brandId], references: [id])
   presentations   ProductPresentation[]
-  status          ProductStatus?
+  status          ProductStatus        @default(active)
   createdAt       DateTime             @default(now())
   tags            ProductTag[]
 }

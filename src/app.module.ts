@@ -10,6 +10,7 @@ import { SuppliersModule } from './modules/suppliers/suppliers.module';
 import { PendingsModule } from './modules/pendings/pendings.module';
 import { BrandsModule } from './modules/brands/brands.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
     PendingsModule,
     BrandsModule,
     CategoriesModule,
+    ProductsModule,
   ],
   controllers: [],
   providers: [],

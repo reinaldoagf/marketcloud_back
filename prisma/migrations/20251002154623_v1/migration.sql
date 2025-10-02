@@ -94,7 +94,7 @@ CREATE TABLE `Product` (
     `unitMeasurement` ENUM('liters', 'kilograms') NULL,
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
-    `status` ENUM('active', 'inactive', 'review') NULL,
+    `status` ENUM('active', 'inactive', 'review') NOT NULL DEFAULT 'active',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
