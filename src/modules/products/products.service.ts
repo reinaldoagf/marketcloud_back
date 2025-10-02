@@ -10,6 +10,10 @@ const SELECT_FIELDS = {
   id: true,
   name: true,
   status: true,
+  brandId: true,
+  brand: true,
+  categoryId: true,
+  category: true,
   createdAt: true,
 };
 
@@ -78,7 +82,9 @@ export class ProductsService {
     // Crear el colaborador
     return this.prisma.product.create({
       data: {
-        name: dto.name
+        name: dto.name,
+        brandId: dto.brandId ?? null,
+        categoryId: dto.categoryId ?? null
       },
     });
   }
@@ -94,6 +100,8 @@ export class ProductsService {
       where: { id },
       data: {
         name: dto.name ?? product.name,
+        brandId: dto.brandId ?? product.brandId,
+        categoryId: dto.categoryId ?? product.categoryId,
       },
     });
   }
