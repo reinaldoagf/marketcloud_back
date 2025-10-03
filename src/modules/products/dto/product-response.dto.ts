@@ -1,9 +1,27 @@
 // dto/product-response.dto.ts
-import { ProductStatus } from '@prisma/client';
+import { ProductStatus, ProductPacking, UnitMeasurement, PriceCalculation } from '@prisma/client';
+import { BrandResponseDto } from '../../brands/dto/brand-response.dto';
+import { CategoryResponseDto } from '../../categories/dto/category-response.dto';
+
+export class ProductPresentationDto {
+  id: number;
+  flavor?: string | null;
+  measurementQuantity: number;
+  packing: ProductPacking;
+  createdAt: Date;
+}
 
 export class ProductResponseDto {
   id: number;
   name: string;
   status: ProductStatus;
+  priceCalculation: PriceCalculation | null;
+  itHasPresentations: boolean | null;
+  unitMeasurement: UnitMeasurement | null;
+  brandId?: number | null;
+  brand?: BrandResponseDto | null;
+  categoryId?: number | null;
+  category?: CategoryResponseDto | null;
+  presentations?: ProductPresentationDto[];
   createdAt: Date;
 }

@@ -33,14 +33,15 @@ async function main(): Promise<void> {
   await prisma.user.createMany({
     data: [
       {
-        email: 'reinaldoagf1@gmail.com',
-        name: 'Reinaldo González',
-        username: 'reinaldoagf',
+        email: 'admin@gmail.com',
+        name: 'Administrador',
+        username: 'admin',
         dni: '0000000',
         state: `estado bolívar`,
         city: `ciudad guayana`,
         password: hashedPassword,
         status: UserStatus.active,
+        hasAllPermissions: true,
       },
     ],
     skipDuplicates: true,

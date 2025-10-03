@@ -1,5 +1,5 @@
 // src/modules/products/products.service.ts
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -10,11 +10,27 @@ const SELECT_FIELDS = {
   id: true,
   name: true,
   status: true,
-  brandId: true,
-  brand: true,
-  categoryId: true,
-  category: true,
   createdAt: true,
+  brandId: true,
+  categoryId: true,
+  priceCalculation: true,
+  itHasPresentations: true,
+  unitMeasurement: true,
+  brand: {
+    select: { id: true, name: true, createdAt: true },
+  },
+  category: {
+    select: { id: true, name: true, createdAt: true },
+  },
+  presentations: {
+    select: {
+      id: true,
+      flavor: true,
+      measurementQuantity: true,
+      packing: true,
+      createdAt: true,
+    },
+  },
 };
 
 @Injectable()
@@ -42,7 +58,7 @@ export class ProductsService {
     if (status) {
       where.status = status as any; // casteamos porque viene como string
     }
-    
+
     if (startDate && endDate) {
       where[dateKey] = {
         gte: new Date(startDate),
@@ -79,14 +95,35 @@ export class ProductsService {
   }
 
   async addProduct(dto: CreateProductDto) {
-    // Crear el colaborador
-    return this.prisma.product.create({
-      data: {
-        name: dto.name,
-        brandId: dto.brandId ?? null,
-        categoryId: dto.categoryId ?? null
-      },
-    });
+    try {
+      // Crear producto junto con presentaciones si vienen
+      const product = await this.prisma.product.create({
+        data: {
+          name: dto.name,
+          itHasPresentations: dto.itHasPresentations,
+          unitMeasurement: dto.unitMeasurement,
+          brandId: dto.brandId ?? null,
+          categoryId: dto.categoryId ?? null,
+          presentations:
+            dto.itHasPresentations && dto.presentations?.length
+              ? {
+                  create: dto.presentations.map((p) => ({
+                    flavor: p.flavor ?? null,
+                    measurementQuantity: p.measurementQuantity ?? null,
+                    packing: p.packing ?? null,
+                  })),
+                }
+              : undefined,
+        },
+        include: {
+          presentations: true,
+        },
+      });
+
+      return product;
+    } catch (err: any) {
+      throw new BadRequestException(`Error creating product: ${err.message}`);
+    }
   }
 
   async updateProduct(id: number, dto: UpdateProductDto) {

@@ -27,9 +27,21 @@ enum UserStatus {
   inactive
 }
 
+enum ProductPacking {
+  bottle
+  bag
+  box
+  package
+}
+
 enum UnitMeasurement {
   liters
-  kilograms
+  grams
+}
+
+enum PriceCalculation {
+  quantity
+  unitMeasurement
 }
 
 enum ProductStatus {
@@ -91,35 +103,36 @@ model RolePage {
 }
 
 model User {
-  id        Int             @id @default(autoincrement())
-  avatar    String?
-  name      String
-  email     String          @unique
-  username  String          @unique
-  dni       String?         @unique
-  password  String    
-  status    UserStatus      @default(active)
-  createdAt DateTime        @default(now())
+  id                    Int             @id @default(autoincrement())
+  avatar                String?
+  name                  String
+  email                 String          @unique
+  username              String          @unique
+  dni                   String?         @unique
+  password              String    
+  status                UserStatus      @default(active)
+  createdAt             DateTime        @default(now())
+  hasAllPermissions     Boolean         @default(false)
 
-  roleId    Int?
-  role      Role?           @relation(fields: [roleId], references: [id])
+  roleId                Int?
+  role                  Role?           @relation(fields: [roleId], references: [id])
 
-  country       String      @default("venezuela")
-  state         String
-  city          String
+  country               String          @default("venezuela")
+  state                 String
+  city                  String
 
-  businessId Int?
+  businessId            Int?
   // Relación opcional con Business
-  business Business?        @relation("BusinessOwner")
+  business              Business?       @relation("BusinessOwner")
 
   // relaciones
-  createdPendings Pending[] @relation("CreatedBy")
-  linkedPendings  Pending[] @relation("LinkedUser")
+  createdPendings       Pending[]       @relation("CreatedBy")
+  linkedPendings        Pending[]       @relation("LinkedUser")
 
-  collaborations  BusinessBranchCollaborator[]
-  clients         BusinessBranchClient[]
-  suppliers       BusinessBranchSupplier[]
-  purchases       BusinessBranchPurchase[]
+  collaborations        BusinessBranchCollaborator[]
+  clients               BusinessBranchClient[]
+  suppliers             BusinessBranchSupplier[]
+  purchases             BusinessBranchPurchase[]
 }
 
 model ProductBrand {
@@ -137,63 +150,63 @@ model ProductCategory {
 }
 
 model Product {
-  id              Int                  @id @default(autoincrement())
-  name            String
-  itHasFlavor     Boolean? 
-  unitMeasurement UnitMeasurement?
-  categoryId      Int?
-  category        ProductCategory?     @relation(fields: [categoryId], references: [id])
-  brandId         Int?
-  brand           ProductBrand?        @relation(fields: [brandId], references: [id])
-  presentations   ProductPresentation[]
-  status          ProductStatus        @default(active)
-  createdAt       DateTime             @default(now())
-  tags            ProductTag[]
+  id                     Int                   @id @default(autoincrement())
+  name                   String
+  itHasPresentations     Boolean?              @default(false)
+  unitMeasurement        UnitMeasurement?      @default(grams)
+  priceCalculation       PriceCalculation?     @default(unitMeasurement)
+  categoryId             Int?
+  category               ProductCategory?      @relation(fields: [categoryId], references: [id])
+  brandId                Int?
+  brand                  ProductBrand?         @relation(fields: [brandId], references: [id])
+  presentations          ProductPresentation[]
+  status                 ProductStatus         @default(active)
+  tags                   ProductTag[]
+  createdAt              DateTime              @default(now())
 }
 
 model ProductPresentation {
-  id                   Int       @id @default(autoincrement())
-  productId            Int?
-  product              Product?  @relation(fields: [productId], references: [id])
-  flavor               String?
-  description          String?
-  measurementQuantity  Float
-  quantity             Int?
-  createdAt            DateTime  @default(now())
+  id                     Int             @id @default(autoincrement())
+  flavor                 String?
+  measurementQuantity    Float
+  packing                ProductPacking  @default(bag)
+  productId              Int?
+  product                Product?        @relation(fields: [productId], references: [id])
+  createdAt              DateTime        @default(now())
 }
 
 // tabla para tags de productos
 model ProductTag {
-  id        Int     @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   tag       String
   productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product      @relation(fields: [productId], references: [id])
 }
 
 model Pending {
-  id            Int       @id @default(autoincrement())
+  id            Int            @id @default(autoincrement())
   title         String
   message       String
   eventDate     DateTime?
   businessId    Int
-  business      Business @relation(fields: [businessId], references: [id])
+  business      Business       @relation(fields: [businessId], references: [id])
   branchId      Int
   branch        BusinessBranch @relation(fields: [branchId], references: [id])
   createdById   Int?
-  createdBy     User?     @relation("CreatedBy", fields: [createdById], references: [id])
+  createdBy     User?          @relation("CreatedBy", fields: [createdById], references: [id])
   linkedUserId  Int?
-  linkedUser    User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
-  createdAt     DateTime  @default(now())
+  linkedUser    User?          @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  createdAt     DateTime       @default(now())
 }
 
 model SubscriptionPlan {
-  id                 Int       @id @default(autoincrement())
+  id                 Int        @id @default(autoincrement())
   title              String
   price              Float
   quantityProducts   Int?
   quantityBranches   Int?
-  proFunctions      Boolean
-  createdAt          DateTime  @default(now())
+  proFunctions       Boolean
+  createdAt          DateTime   @default(now())
   businesses         Business[]
 }
 
@@ -201,7 +214,6 @@ model Business {
   id                        Int              @id @default(autoincrement())
   rif                       String?
   logo                      String?
-  // Clave foránea hacia User
   ownerId                   Int   @unique
   owner                     User  @relation("BusinessOwner", fields: [ownerId], references: [id])
   name                      String
@@ -214,7 +226,6 @@ model Business {
   createdAt                 DateTime         @default(now())
   purchases                 Purchase[]
   pendings                  Pending[]
-
   // relación 1:N con usuarios (empleados/miembros)
   /* users User[] @relation("BusinessUsers") */
 }
@@ -236,7 +247,7 @@ model BusinessBranch {
 }
 
 model BusinessBranchCollaborator {
-  id        Int           @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   userId    Int
   branchId  Int
   user      User           @relation(fields: [userId], references: [id])
@@ -246,7 +257,7 @@ model BusinessBranchCollaborator {
 }
 
 model BusinessBranchClient {
-  id        Int           @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   userId    Int
   branchId  Int
   user      User           @relation(fields: [userId], references: [id])
@@ -255,7 +266,7 @@ model BusinessBranchClient {
 }
 
 model BusinessBranchSupplier {
-  id        Int           @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   userId    Int
   branchId  Int
   user      User           @relation(fields: [userId], references: [id])
@@ -264,12 +275,12 @@ model BusinessBranchSupplier {
 }
 
 model BusinessBranchPurchase {
-  id        Int       @id @default(autoincrement())
-  userId    Int?
-  user      User?     @relation(fields: [userId], references: [id])
+  id         Int            @id @default(autoincrement())
+  userId     Int?
+  user       User?          @relation(fields: [userId], references: [id])
   clientName String?
   clientCi   String?
-  amount    Float
-  status    PurchaseStatus
-  createdAt DateTime  @default(now())
+  amount     Float
+  status     PurchaseStatus @default(pending)
+  createdAt  DateTime       @default(now())
 }

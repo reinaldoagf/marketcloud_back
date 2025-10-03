@@ -56,6 +56,7 @@ CREATE TABLE `User` (
     `password` VARCHAR(191) NOT NULL,
     `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `hasAllPermissions` BOOLEAN NOT NULL DEFAULT false,
     `roleId` INTEGER NULL,
     `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
     `state` VARCHAR(191) NOT NULL,
@@ -90,8 +91,9 @@ CREATE TABLE `ProductCategory` (
 CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `itHasFlavor` BOOLEAN NULL,
-    `unitMeasurement` ENUM('liters', 'kilograms') NULL,
+    `itHasPresentations` BOOLEAN NULL DEFAULT false,
+    `unitMeasurement` ENUM('liters', 'grams') NULL DEFAULT 'grams',
+    `priceCalculation` ENUM('quantity', 'unitMeasurement') NULL DEFAULT 'unitMeasurement',
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
     `status` ENUM('active', 'inactive', 'review') NOT NULL DEFAULT 'active',
@@ -103,11 +105,10 @@ CREATE TABLE `Product` (
 -- CreateTable
 CREATE TABLE `ProductPresentation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `productId` INTEGER NULL,
     `flavor` VARCHAR(191) NULL,
-    `description` VARCHAR(191) NULL,
     `measurementQuantity` DOUBLE NOT NULL,
-    `quantity` INTEGER NULL,
+    `packing` ENUM('bottle', 'bag', 'box', 'package') NOT NULL DEFAULT 'bag',
+    `productId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -219,7 +220,7 @@ CREATE TABLE `BusinessBranchPurchase` (
     `clientName` VARCHAR(191) NULL,
     `clientCi` VARCHAR(191) NULL,
     `amount` DOUBLE NOT NULL,
-    `status` ENUM('pending', 'paid', 'expired') NOT NULL,
+    `status` ENUM('pending', 'paid', 'expired') NOT NULL DEFAULT 'pending',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
