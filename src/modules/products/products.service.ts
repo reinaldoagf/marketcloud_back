@@ -62,7 +62,7 @@ export class ProductsService {
       where.OR = [{ name: { contains: search } }];
     }
 
-    if (status) {
+    if (status && status!== 'Todos') {
       where.status = status as any; // casteamos porque viene como string
     }
 
@@ -111,6 +111,7 @@ export class ProductsService {
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
+          status: dto.status ?? null,
           tags: dto.tags?.length ? {
             create: dto.tags.map((p) => ({ tag: p.tag ?? null })),
           } : undefined,
@@ -146,7 +147,7 @@ export class ProductsService {
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
-
+          status: dto.status ?? 'active',
           tags: {
             // Borra las anteriores y crea las nuevas
             deleteMany: {},
