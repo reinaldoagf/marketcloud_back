@@ -127,21 +127,44 @@ export class ProductsService {
   }
 
   async updateProduct(id: number, dto: UpdateProductDto) {
-    const product = await this.prisma.product.findUnique({ where: { id } });
+    try {
+      const product = await this.prisma.product.update({
+        where: { id },
+        data: {
+          name: dto.name,
+          itHasPresentations: dto.itHasPresentations,
+          unitMeasurement: dto.unitMeasurement,
+          brandId: dto.brandId ?? null,
+          categoryId: dto.categoryId ?? null,
 
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+          // 🔹 Manejo de presentaciones
+          presentations: dto.itHasPresentations
+            ? {
+                // Borra las anteriores y crea las nuevas
+                deleteMany: {},
+                create:
+                  dto.presentations?.map((p) => ({
+                    flavor: p.flavor ?? null,
+                    measurementQuantity: p.measurementQuantity ?? null,
+                    packing: p.packing ?? null,
+                  })) || [],
+              }
+            : {
+                // Si ya no tiene presentaciones, las eliminamos
+                deleteMany: {},
+              },
+        },
+        include: {
+          presentations: true,
+        },
+      });
+
+      return product;
+    } catch (err: any) {
+      throw new BadRequestException(`Error updating product: ${err.message}`);
     }
-
-    return this.prisma.product.update({
-      where: { id },
-      data: {
-        name: dto.name ?? product.name,
-        brandId: dto.brandId ?? product.brandId,
-        categoryId: dto.categoryId ?? product.categoryId,
-      },
-    });
   }
+
   async deleteProduct(id: number) {
     // Verificar si existe antes de eliminar
     const product = await this.prisma.product.findUnique({
@@ -150,6 +173,21 @@ export class ProductsService {
 
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    // 🔹 Buscar todos los branches asociados al negocio
+    const presentations = await this.prisma.productPresentation.findMany({
+      where: { productId: id },
+      select: { id: true },
+    });
+
+    const presentationsIds = presentations.map((b) => b.id);
+
+    // 🔹 Si existen dependencias (ejemplo: pendings ligados a branchId), borrarlas primero
+    if (presentationsIds.length > 0) {
+      await this.prisma.productPresentation.deleteMany({
+        where: { productId: { in: presentationsIds } },
+      });
     }
 
     return this.prisma.product.delete({
