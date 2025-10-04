@@ -22,6 +22,13 @@ const SELECT_FIELDS = {
   category: {
     select: { id: true, name: true, createdAt: true },
   },
+  tags: {
+    select: {
+      id: true,
+      tag: true,
+      createdAt: true,
+    },
+  },
   presentations: {
     select: {
       id: true,
@@ -104,6 +111,9 @@ export class ProductsService {
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
+          tags: dto.tags?.length ? {
+            create: dto.tags.map((p) => ({ tag: p.tag ?? null })),
+          } : undefined,
           presentations:
             dto.itHasPresentations && dto.presentations?.length
               ? {
@@ -136,6 +146,15 @@ export class ProductsService {
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
+
+          tags: {
+            // Borra las anteriores y crea las nuevas
+            deleteMany: {},
+            create:
+              dto.tags?.map((p) => ({
+                tag: p.tag ?? null,
+              })) || [],
+          },
 
           // 🔹 Manejo de presentaciones
           presentations: dto.itHasPresentations
@@ -173,6 +192,19 @@ export class ProductsService {
 
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
+    }
+
+    // 🔹 Buscar todos los branches asociados al negocio
+    const tags = await this.prisma.productTag.findMany({
+      where: { productId: id },
+      select: { id: true },
+    });
+    const tagsIds = tags.map((b) => b.id);
+    // 🔹 Si existen dependencias (ejemplo: pendings ligados a branchId), borrarlas primero
+    if (tagsIds.length > 0) {
+      await this.prisma.productTag.deleteMany({
+        where: { productId: { in: tagsIds } },
+      });
     }
 
     // 🔹 Buscar todos los branches asociados al negocio

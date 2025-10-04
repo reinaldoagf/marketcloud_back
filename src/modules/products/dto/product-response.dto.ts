@@ -3,6 +3,12 @@ import { ProductStatus, ProductPacking, UnitMeasurement, PriceCalculation } from
 import { BrandResponseDto } from '../../brands/dto/brand-response.dto';
 import { CategoryResponseDto } from '../../categories/dto/category-response.dto';
 
+export class ProductTagDto {
+  id: number;
+  tag: string;
+  createdAt: Date;
+}
+
 export class ProductPresentationDto {
   id: number;
   flavor?: string | null;
@@ -22,6 +28,7 @@ export class ProductResponseDto {
   brand?: BrandResponseDto | null;
   categoryId?: number | null;
   category?: CategoryResponseDto | null;
+  tags?: ProductTagDto[];
   presentations?: ProductPresentationDto[];
   createdAt: Date;
 }

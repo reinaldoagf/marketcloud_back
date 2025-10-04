@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsString, IsInt, IsOptional, IsBoolean, IsEnum, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { UnitMeasurement } from '@prisma/client';
+import { CreateProductTagDto } from './create-product-tag.dto';
 import { CreateProductPresentationDto } from './create-product-presentation.dto';
 
 export class CreateProductDto {
@@ -29,6 +30,12 @@ export class CreateProductDto {
   @IsInt()
   @Type(() => Number)
   categoryId?: number;
+
+  @ApiPropertyOptional({ type: [CreateProductTagDto] })
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => CreateProductTagDto)
+  tags?: CreateProductTagDto[];
 
   @ApiPropertyOptional({ type: [CreateProductPresentationDto] })
   @IsOptional()
