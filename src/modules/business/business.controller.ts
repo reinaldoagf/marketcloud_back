@@ -1,6 +1,8 @@
 // src/business/business.controller.ts
 import {
   Controller,
+  Get,
+  Query,
   Post,
   Body,
   UseInterceptors,
@@ -13,11 +15,31 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { CreateBusinessDto } from './dto/create-business.dto';
+import { PaginatedBusinessResponseDto } from './dto/paginated-business-response.dto';
 import { BusinessService } from './business.service';
 
 @Controller('business')
 export class BusinessController {
   constructor(private readonly service: BusinessService) {}
+
+  @Get('/')
+  async getByFilters(
+    @Query('page', ParseIntPipe) page = '1',
+    @Query('size', ParseIntPipe) pageSize = '10',
+    @Query('search') search = '',
+    @Query('dateKey') dateKey = '',
+    @Query('startDate') startDate = '',
+    @Query('endDate') endDate = '',
+  ): Promise<PaginatedBusinessResponseDto> {
+    return this.service.getByFilters(
+      Number(page),
+      Number(pageSize),
+      search,
+      dateKey,
+      startDate,
+      endDate,
+    );
+  }
 
   @Post()
   @UseInterceptors(
