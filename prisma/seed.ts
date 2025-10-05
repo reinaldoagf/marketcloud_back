@@ -48,6 +48,23 @@ async function main(): Promise<void> {
   });
 
   console.log('✅ Usuarios creados con contraseña encriptada');
+
+  await prisma.permission.createMany({
+    data: [
+      {
+        type: 'view',
+      },
+      {
+        type: 'update',
+      },
+      {
+        type: 'delete',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  console.log('✅ Permisos creados exitosamente');
 }
 
 main()

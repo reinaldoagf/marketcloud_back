@@ -52,8 +52,8 @@ enum ProductStatus {
 
 enum PermissionType {
   view
-  delete
   update
+  delete
 }
 
 //
@@ -69,18 +69,18 @@ model Purchase {
 }
 
 model Role {
-  id          Int          @id @default(autoincrement())
-  key         String       @unique
-  name        String
-  createdAt   DateTime     @default(now())
-  users       User[]
-  permissions RolePermission[]
-  pages       RolePage[]
+  id           Int               @id @default(autoincrement())
+  key          String            @unique
+  name         String
+  users        User[]
+  permissions  RolePermission[]
+  pages        RolePage[]
+  createdAt    DateTime          @default(now())
 }
 
 model Permission {
   id    Int              @id @default(autoincrement())
-  type  PermissionType
+  type  PermissionType   @unique
   roles RolePermission[]
 }
 

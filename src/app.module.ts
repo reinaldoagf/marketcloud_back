@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { RolesModule } from './modules/roles/roles.module';
 import { BusinessModule } from './modules/business/business.module';
 import { ClientsModule } from './modules/clients/clients.module';
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
@@ -18,6 +19,7 @@ import { ProductsModule } from './modules/products/products.module';
     PrismaModule,
     AuthModule,
     UsersModule,
+    RolesModule,
     BusinessModule,
     ClientsModule,
     CollaboratorsModule,

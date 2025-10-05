@@ -23,8 +23,9 @@ CREATE TABLE `Role` (
 -- CreateTable
 CREATE TABLE `Permission` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` ENUM('view', 'delete', 'update') NOT NULL,
+    `type` ENUM('view', 'update', 'delete') NOT NULL,
 
+    UNIQUE INDEX `Permission_type_key`(`type`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
