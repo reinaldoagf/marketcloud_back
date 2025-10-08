@@ -2,6 +2,7 @@
 import { ProductStatus, ProductPacking, UnitMeasurement, PriceCalculation } from '@prisma/client';
 import { BrandResponseDto } from '../../brands/dto/brand-response.dto';
 import { CategoryResponseDto } from '../../categories/dto/category-response.dto';
+import { BusinessResponseDto } from '../../business/dto/business-response.dto';
 
 export class ProductTagDto {
   id: number;
@@ -28,6 +29,8 @@ export class ProductResponseDto {
   brand?: BrandResponseDto | null;
   categoryId?: number | null;
   category?: CategoryResponseDto | null;
+  businessId?: number | null;
+  business?: BusinessResponseDto | null;
   tags?: ProductTagDto[];
   presentations?: ProductPresentationDto[];
   createdAt: Date;

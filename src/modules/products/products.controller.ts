@@ -1,5 +1,15 @@
 // src/modules/products/products.controller.ts
-import { Controller, Get, Post, Put, Body, Query, ParseIntPipe, Delete, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Query,
+  ParseIntPipe,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -30,6 +40,10 @@ export class ProductsController {
       startDate,
       endDate,
     );
+  }
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.service.findOne(id);
   }
   @Post()
   async create(@Body() dto: CreateProductDto) {

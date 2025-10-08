@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Query,
   Delete,
   ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import { ProductStockService } from './product-stock.service';
 import { CreateProductStockDto } from './dto/create-product-stock.dto';
@@ -42,7 +42,7 @@ export class ProductStockController {
     );
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductStockDto) {
     return this.service.update(id, dto);
   }

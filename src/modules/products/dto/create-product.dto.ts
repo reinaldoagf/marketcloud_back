@@ -35,6 +35,12 @@ export class CreateProductDto {
   @Type(() => Number)
   categoryId?: number;
 
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsInt()
+  @Type(() => Number)
+  businessId?: number;
+
   @ApiPropertyOptional({ type: [CreateProductTagDto] })
   @IsOptional()
   @ValidateNested({ each: true })

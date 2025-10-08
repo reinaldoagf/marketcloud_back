@@ -97,6 +97,7 @@ CREATE TABLE `Product` (
     `priceCalculation` ENUM('quantity', 'unitMeasurement') NULL DEFAULT 'unitMeasurement',
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
+    `businessId` INTEGER NULL,
     `status` ENUM('active', 'inactive', 'review') NOT NULL DEFAULT 'active',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -132,6 +133,7 @@ CREATE TABLE `ProductStock` (
     `totalSellingPrice` INTEGER NOT NULL DEFAULT 0,
     `purchasePricePerUnit` INTEGER NOT NULL DEFAULT 0,
     `profitPercentage` INTEGER NOT NULL DEFAULT 0,
+    `returnOnInvestment` INTEGER NOT NULL DEFAULT 0,
     `productPresentationId` INTEGER NULL,
     `productId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -262,6 +264,9 @@ ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`cat
 
 -- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `ProductBrand`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Product` ADD CONSTRAINT `Product_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `ProductPresentation` ADD CONSTRAINT `ProductPresentation_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

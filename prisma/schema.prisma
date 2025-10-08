@@ -138,8 +138,8 @@ model User {
 model ProductBrand {
   id        Int       @id @default(autoincrement())
   name      String
-  createdAt DateTime  @default(now())
   products  Product[]
+  createdAt DateTime  @default(now())
 }
 
 model ProductCategory {
@@ -159,6 +159,8 @@ model Product {
   category               ProductCategory?      @relation(fields: [categoryId], references: [id])
   brandId                Int?
   brand                  ProductBrand?         @relation(fields: [brandId], references: [id])
+  businessId             Int?
+  business               Business?             @relation(fields: [businessId], references: [id])
   presentations          ProductPresentation[]
   stocks                 ProductStock[]
   status                 ProductStatus         @default(active)
@@ -192,6 +194,7 @@ model ProductStock {
   totalSellingPrice      Int                   @default(0)
   purchasePricePerUnit   Int                   @default(0)
   profitPercentage       Int                   @default(0)
+  returnOnInvestment     Int                   @default(0)
   productPresentationId  Int?
   productPresentation    ProductPresentation?  @relation(fields: [productPresentationId], references: [id])
   productId              Int?
@@ -242,6 +245,7 @@ model Business {
   createdAt                 DateTime         @default(now())
   purchases                 Purchase[]
   pendings                  Pending[]
+  products                  Product[]
   // relación 1:N con usuarios (empleados/miembros)
   /* users User[] @relation("BusinessUsers") */
 }

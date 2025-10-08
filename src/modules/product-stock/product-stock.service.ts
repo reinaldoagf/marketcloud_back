@@ -11,6 +11,7 @@ const SELECT_FIELDS = {
   totalSellingPrice: true,
   purchasePricePerUnit: true,
   profitPercentage: true,
+  returnOnInvestment: true,
   productPresentationId: true,
   productPresentation: true,
   productId: true,
@@ -77,6 +78,7 @@ export class ProductStockService {
       totalPages: Math.ceil(total / pageSize),
     };
   }
+
   // ✅ Crear nuevo registro
   async create(dto: CreateProductStockDto) {
     try {
@@ -86,6 +88,7 @@ export class ProductStockService {
           totalSellingPrice: dto.totalSellingPrice,
           purchasePricePerUnit: dto.purchasePricePerUnit,
           profitPercentage: dto.profitPercentage,
+          returnOnInvestment: dto.returnOnInvestment,
           productPresentationId: dto.productPresentationId,
           productId: dto.productId,
         },

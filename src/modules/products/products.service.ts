@@ -13,6 +13,7 @@ const SELECT_FIELDS = {
   createdAt: true,
   brandId: true,
   categoryId: true,
+  businessId: true,
   priceCalculation: true,
   itHasPresentations: true,
   unitMeasurement: true,
@@ -21,6 +22,9 @@ const SELECT_FIELDS = {
   },
   category: {
     select: { id: true, name: true, createdAt: true },
+  },
+  business: {
+    select: { id: true, name: true, rif: true, createdAt: true },
   },
   tags: {
     select: {
@@ -62,7 +66,7 @@ export class ProductsService {
       where.OR = [{ name: { contains: search } }];
     }
 
-    if (status && status!== 'Todos') {
+    if (status && status !== 'Todos') {
       where.status = status as any; // casteamos porque viene como string
     }
 
@@ -101,6 +105,17 @@ export class ProductsService {
     };
   }
 
+  // ✅ Buscar uno por ID
+  async findOne(id: number) {
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      select: SELECT_FIELDS,
+    });
+
+    if (!product) throw new NotFoundException(`Product with ID ${id} not found`);
+    return product;
+  }
+
   async addProduct(dto: CreateProductDto) {
     try {
       // Crear producto junto con presentaciones si vienen
@@ -112,9 +127,11 @@ export class ProductsService {
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
           status: dto.status ?? null,
-          tags: dto.tags?.length ? {
-            create: dto.tags.map((p) => ({ tag: p.tag ?? null })),
-          } : undefined,
+          tags: dto.tags?.length
+            ? {
+                create: dto.tags.map((p) => ({ tag: p.tag ?? null })),
+              }
+            : undefined,
           presentations:
             dto.itHasPresentations && dto.presentations?.length
               ? {

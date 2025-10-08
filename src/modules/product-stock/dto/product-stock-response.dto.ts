@@ -8,6 +8,7 @@ export class ProductStockResponseDto {
   totalSellingPrice: number;
   purchasePricePerUnit: number;
   profitPercentage: number;
+  returnOnInvestment: number;
   productPresentationId?: number | null;
   productPresentation?: ProductPresentationDto | null;
   productId: number | null;

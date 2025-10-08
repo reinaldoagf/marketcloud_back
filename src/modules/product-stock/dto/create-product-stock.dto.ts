@@ -17,6 +17,10 @@ export class CreateProductStockDto {
   @Min(0)
   profitPercentage: number;
 
+  @IsNumber()
+  @Min(0)
+  returnOnInvestment: number;
+
   @IsOptional()
   @IsInt()
   productPresentationId?: number;
