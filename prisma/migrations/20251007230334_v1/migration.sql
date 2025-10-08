@@ -126,6 +126,20 @@ CREATE TABLE `ProductTag` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `ProductStock` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `units` INTEGER NOT NULL DEFAULT 0,
+    `totalSellingPrice` INTEGER NOT NULL DEFAULT 0,
+    `purchasePricePerUnit` INTEGER NOT NULL DEFAULT 0,
+    `profitPercentage` INTEGER NOT NULL DEFAULT 0,
+    `productPresentationId` INTEGER NULL,
+    `productId` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `Pending` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `title` VARCHAR(191) NOT NULL,
@@ -254,6 +268,12 @@ ALTER TABLE `ProductPresentation` ADD CONSTRAINT `ProductPresentation_productId_
 
 -- AddForeignKey
 ALTER TABLE `ProductTag` ADD CONSTRAINT `ProductTag_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_productPresentationId_fkey` FOREIGN KEY (`productPresentationId`) REFERENCES `ProductPresentation`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pending` ADD CONSTRAINT `Pending_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -12,6 +12,7 @@ import { PendingsModule } from './modules/pendings/pendings.module';
 import { BrandsModule } from './modules/brands/brands.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ProductStockModule } from './modules/product-stock/product-stock.module';
 
 @Module({
   imports: [
@@ -28,8 +29,8 @@ import { ProductsModule } from './modules/products/products.module';
     BrandsModule,
     CategoriesModule,
     ProductsModule,
+    ProductStockModule,
   ],
-  controllers: [],
   providers: [],
 })
 export class AppModule {}
