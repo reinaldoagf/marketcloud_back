@@ -26,6 +26,18 @@ const SELECT_FIELDS = {
   business: {
     select: { id: true, name: true, rif: true, createdAt: true },
   },
+  stocks: {
+    select: {
+      id: true,
+      units: true,
+      totalSellingPrice: true,
+      purchasePricePerUnit: true,
+      profitPercentage: true,
+      returnOnInvestment: true,
+      productPresentationId: true,
+      createdAt: true,
+    },
+  },
   tags: {
     select: {
       id: true,

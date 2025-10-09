@@ -16,6 +16,8 @@ const SELECT_FIELDS = {
   productPresentation: true,
   productId: true,
   product: true,
+  branchId: true,
+  branch: true,
   createdAt: true,
 };
 
@@ -25,6 +27,7 @@ export class ProductStockService {
 
   // ✅ Obtener por filtros
   async getByFilters(
+    branchId: number,
     page = 1,
     pageSize = 10,
     search = '',
@@ -36,6 +39,12 @@ export class ProductStockService {
 
     // Construimos los filtros dinámicamente
     const where: Prisma.ProductStockWhereInput = {};
+
+    if (branchId) {
+      const existing = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
+      if (!existing) throw new NotFoundException(`BusinessBranch with ID ${branchId} not found`);
+      where.branchId = branchId;
+    }
 
     if (search) {
       where.OR = [
@@ -89,8 +98,9 @@ export class ProductStockService {
           purchasePricePerUnit: dto.purchasePricePerUnit,
           profitPercentage: dto.profitPercentage,
           returnOnInvestment: dto.returnOnInvestment,
-          productPresentationId: dto.productPresentationId,
+          productPresentationId: dto.productPresentationId ?? null,
           productId: dto.productId,
+          branchId: dto.branchId,
         },
         include: {
           productPresentation: true,
@@ -106,7 +116,6 @@ export class ProductStockService {
   async update(id: number, dto: UpdateProductStockDto) {
     const existing = await this.prisma.productStock.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`ProductStock with ID ${id} not found`);
-
     try {
       return await this.prisma.productStock.update({
         where: { id },

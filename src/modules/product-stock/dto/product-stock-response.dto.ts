@@ -13,5 +13,13 @@ export class ProductStockResponseDto {
   productPresentation?: ProductPresentationDto | null;
   productId: number | null;
   product: ProductResponseDto | null;
+  branchId: number;
+  branch: {
+    id: number;
+    country: string;
+    state: string;
+    city: string;
+    address: string;
+  };
   createdAt: Date;
 }

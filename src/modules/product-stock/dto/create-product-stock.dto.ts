@@ -25,7 +25,9 @@ export class CreateProductStockDto {
   @IsInt()
   productPresentationId?: number;
 
-  @IsOptional()
   @IsInt()
-  productId?: number;
+  productId: number;
+
+  @IsInt()
+  branchId: number;
 }

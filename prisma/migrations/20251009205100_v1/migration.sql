@@ -130,12 +130,13 @@ CREATE TABLE `ProductTag` (
 CREATE TABLE `ProductStock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `units` INTEGER NOT NULL DEFAULT 0,
-    `totalSellingPrice` INTEGER NOT NULL DEFAULT 0,
-    `purchasePricePerUnit` INTEGER NOT NULL DEFAULT 0,
-    `profitPercentage` INTEGER NOT NULL DEFAULT 0,
-    `returnOnInvestment` INTEGER NOT NULL DEFAULT 0,
+    `totalSellingPrice` DOUBLE NOT NULL DEFAULT 0.0,
+    `purchasePricePerUnit` DOUBLE NOT NULL DEFAULT 0.0,
+    `profitPercentage` DOUBLE NOT NULL DEFAULT 0.0,
+    `returnOnInvestment` DOUBLE NOT NULL DEFAULT 0.0,
     `productPresentationId` INTEGER NULL,
-    `productId` INTEGER NULL,
+    `productId` INTEGER NOT NULL,
+    `branchId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -278,7 +279,10 @@ ALTER TABLE `ProductTag` ADD CONSTRAINT `ProductTag_productId_fkey` FOREIGN KEY 
 ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_productPresentationId_fkey` FOREIGN KEY (`productPresentationId`) REFERENCES `ProductPresentation`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `ProductStock` ADD CONSTRAINT `ProductStock_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Pending` ADD CONSTRAINT `Pending_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

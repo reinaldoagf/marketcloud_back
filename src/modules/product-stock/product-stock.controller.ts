@@ -25,6 +25,7 @@ export class ProductStockController {
 
   @Get('/')
   async getByFilters(
+    @Query('branchId', ParseIntPipe) branchId,
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -33,6 +34,7 @@ export class ProductStockController {
     @Query('endDate') endDate = '',
   ): Promise<PaginatedProductStockResponseDto> {
     return this.service.getByFilters(
+      branchId,
       Number(page),
       Number(pageSize),
       search,
