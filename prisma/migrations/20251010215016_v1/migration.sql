@@ -92,9 +92,8 @@ CREATE TABLE `ProductCategory` (
 CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `itHasPresentations` BOOLEAN NULL DEFAULT false,
     `unitMeasurement` ENUM('liters', 'grams') NULL DEFAULT 'grams',
-    `priceCalculation` ENUM('quantity', 'unitMeasurement') NULL DEFAULT 'unitMeasurement',
+    `priceCalculation` ENUM('presentation', 'unitMeasurement') NULL DEFAULT 'presentation',
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
     `businessId` INTEGER NULL,
@@ -130,6 +129,7 @@ CREATE TABLE `ProductTag` (
 CREATE TABLE `ProductStock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `units` INTEGER NOT NULL DEFAULT 0,
+    `priceByMeasurement` DOUBLE NOT NULL DEFAULT 0.0,
     `totalSellingPrice` DOUBLE NOT NULL DEFAULT 0.0,
     `purchasePricePerUnit` DOUBLE NOT NULL DEFAULT 0.0,
     `profitPercentage` DOUBLE NOT NULL DEFAULT 0.0,

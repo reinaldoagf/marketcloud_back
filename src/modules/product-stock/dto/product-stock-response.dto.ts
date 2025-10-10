@@ -5,6 +5,7 @@ import { ProductPresentationDto } from '../../products/dto/product-response.dto'
 export class ProductStockResponseDto {
   id: number;
   units: number;
+  priceByMeasurement: number;
   totalSellingPrice: number;
   purchasePricePerUnit: number;
   profitPercentage: number;

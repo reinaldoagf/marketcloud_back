@@ -23,7 +23,6 @@ export class ProductResponseDto {
   name: string;
   status: ProductStatus;
   priceCalculation: PriceCalculation | null;
-  itHasPresentations: boolean | null;
   unitMeasurement: UnitMeasurement | null;
   brandId?: number | null;
   brand?: BrandResponseDto | null;

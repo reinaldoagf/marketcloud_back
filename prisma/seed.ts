@@ -65,6 +65,52 @@ async function main(): Promise<void> {
   });
 
   console.log('✅ Permisos creados exitosamente');
+
+  await prisma.productBrand.createMany({
+    data: [
+      {
+        name: 'FritoLay',
+      },
+      {
+        name: 'Minalba',
+      },
+      {
+        name: 'Lipton',
+      },
+      {
+        name: 'Flips',
+      },
+      {
+        name: 'PAN',
+      },
+      {
+        name: 'ACE',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  console.log('✅ Marcas creadas exitosamente');
+
+  await prisma.productCategory.createMany({
+    data: [
+      {
+        name: 'Productos de Limpieza',
+      },
+      {
+        name: 'Dulces',
+      },
+      {
+        name: 'Bebidas',
+      },
+      {
+        name: 'Alimentos',
+      },
+    ],
+    skipDuplicates: true,
+  });
+
+  console.log('✅ Categorías creadas exitosamente');
 }
 
 main()

@@ -7,6 +7,10 @@ export class CreateProductStockDto {
 
   @IsNumber()
   @Min(0)
+  priceByMeasurement: number;
+
+  @IsNumber()
+  @Min(0)
   totalSellingPrice: number;
 
   @IsNumber()

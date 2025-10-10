@@ -40,7 +40,7 @@ enum UnitMeasurement {
 }
 
 enum PriceCalculation {
-  quantity
+  presentation
   unitMeasurement
 }
 
@@ -152,9 +152,8 @@ model ProductCategory {
 model Product {
   id                     Int                   @id @default(autoincrement())
   name                   String
-  itHasPresentations     Boolean?              @default(false)
   unitMeasurement        UnitMeasurement?      @default(grams)
-  priceCalculation       PriceCalculation?     @default(unitMeasurement)
+  priceCalculation       PriceCalculation?     @default(presentation)
   categoryId             Int?
   category               ProductCategory?      @relation(fields: [categoryId], references: [id])
   brandId                Int?
@@ -191,6 +190,7 @@ model ProductTag {
 model ProductStock {
   id                     Int                   @id @default(autoincrement())
   units                  Int                   @default(0)
+  priceByMeasurement     Float                 @default(0.0)
   totalSellingPrice      Float                 @default(0.0)
   purchasePricePerUnit   Float                 @default(0.0)
   profitPercentage       Float                 @default(0.0)

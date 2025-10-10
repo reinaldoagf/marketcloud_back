@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsInt, IsOptional, IsBoolean, IsEnum, ValidateNested } from 'class-validator';
+import { IsString, IsInt, IsOptional, IsEnum, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { UnitMeasurement, ProductStatus } from '@prisma/client';
+import { UnitMeasurement, ProductStatus, PriceCalculation } from '@prisma/client';
 import { CreateProductTagDto } from './create-product-tag.dto';
 import { CreateProductPresentationDto } from './create-product-presentation.dto';
 
@@ -11,9 +11,8 @@ export class CreateProductDto {
   name: string;
 
   @ApiProperty()
-  @IsBoolean()
-  @Type(() => Boolean)
-  itHasPresentations: boolean;
+  @IsString()
+  priceCalculation: PriceCalculation;
 
   @ApiProperty({ enum: UnitMeasurement })
   @IsEnum(UnitMeasurement)
