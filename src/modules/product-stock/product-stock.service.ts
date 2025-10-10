@@ -90,6 +90,22 @@ export class ProductStockService {
 
   // ✅ Crear nuevo registro
   async create(dto: CreateProductStockDto) {
+    const { productId, branchId, productPresentationId } = dto;
+    // Verificar existencia previa
+    const existing = await this.prisma.productStock.findFirst({
+      where: {
+        productId,
+        branchId,
+        productPresentationId: productPresentationId ?? null, // trata null como null literal
+      },
+    });
+
+    if (existing) {
+      throw new BadRequestException(
+        `A ProductStock record with this combination already exists.`,
+      );
+    }
+
     try {
       return await this.prisma.productStock.create({
         data: {
@@ -139,5 +155,24 @@ export class ProductStockService {
 
     await this.prisma.productStock.delete({ where: { id } });
     return { message: `ProductStock with ID ${id} deleted successfully` };
+  }
+
+  // ✅ Eliminar registros
+  async deleteProductStockByBranch(branchId: number, productId: number) {
+    const branch = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
+    if (!branch) throw new NotFoundException(`BusinessBranch with ID ${branchId} not found`);
+
+    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    if (!product) throw new NotFoundException(`Product with ID ${productId} not found`);
+
+    const deleted = await this.prisma.productStock.deleteMany({
+      where: { branchId, productId },
+    });
+
+    if (deleted.count === 0) {
+      throw new NotFoundException(`No ProductStock records found for product ${productId} in branch ${branchId}`);
+    }
+
+    return { message: `Deleted ${deleted.count} ProductStock record(s)` };
   }
 }

@@ -53,4 +53,12 @@ export class ProductStockController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.service.remove(id);
   }
+
+  @Delete(':branchId/:productId')
+  deleteProductStockByBranch(
+    @Param('branchId', ParseIntPipe) branchId: number,
+    @Param('productId', ParseIntPipe) productId: number,
+  ) {
+    return this.service.deleteProductStockByBranch(branchId, productId);
+  }
 }

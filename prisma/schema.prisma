@@ -200,8 +200,10 @@ model ProductStock {
   productId              Int
   product                Product?              @relation(fields: [productId], references: [id])
   branchId               Int
-  branch                 BusinessBranch @relation(fields: [branchId], references: [id])
+  branch                 BusinessBranch        @relation(fields: [branchId], references: [id])
   createdAt              DateTime              @default(now())
+  
+  @@unique([productId, branchId, productPresentationId])
 }
 
 model Pending {

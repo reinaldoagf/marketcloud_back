@@ -139,6 +139,7 @@ CREATE TABLE `ProductStock` (
     `branchId` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
+    UNIQUE INDEX `ProductStock_productId_branchId_productPresentationId_key`(`productId`, `branchId`, `productPresentationId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
