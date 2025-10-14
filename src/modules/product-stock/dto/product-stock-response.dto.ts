@@ -6,6 +6,7 @@ export class ProductStockResponseDto {
   id: number;
   units: number;
   priceByMeasurement: number;
+  quantityPerMeasure: number | null;
   totalSellingPrice: number;
   purchasePricePerUnit: number;
   profitPercentage: number;

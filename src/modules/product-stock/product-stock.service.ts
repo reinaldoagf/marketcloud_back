@@ -9,6 +9,7 @@ const SELECT_FIELDS = {
   id: true,
   units: true,
   priceByMeasurement: true,
+  quantityPerMeasure: true,
   totalSellingPrice: true,
   purchasePricePerUnit: true,
   profitPercentage: true,
@@ -112,6 +113,7 @@ export class ProductStockService {
         data: {
           units: dto.units,
           priceByMeasurement: dto.priceByMeasurement,
+          quantityPerMeasure: dto.quantityPerMeasure ?? 0,
           totalSellingPrice: dto.totalSellingPrice,
           purchasePricePerUnit: dto.purchasePricePerUnit,
           profitPercentage: dto.profitPercentage,

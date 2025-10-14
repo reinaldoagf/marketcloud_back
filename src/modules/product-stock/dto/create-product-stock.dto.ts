@@ -9,6 +9,11 @@ export class CreateProductStockDto {
   @Min(0)
   priceByMeasurement: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  quantityPerMeasure?: number;
+
   @IsNumber()
   @Min(0)
   totalSellingPrice: number;
