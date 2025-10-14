@@ -70,8 +70,12 @@ export class ProductStockService {
       };
     }
 
-    const [total, data] = await Promise.all([
+    const [total, distinctProducts, data] = await Promise.all([
       this.prisma.productStock.count({ where }),
+      this.prisma.productStock.groupBy({
+        by: ['productId'],
+        where,
+      }),
       this.prisma.productStock.findMany({
         where,
         select: SELECT_FIELDS,
@@ -80,10 +84,12 @@ export class ProductStockService {
         take: pageSize,
       }),
     ]);
+    const totalByProducts = distinctProducts.length;
 
     return {
       data,
       total,
+      totalByProducts,
       page,
       pageSize,
       totalPages: Math.ceil(total / pageSize),
