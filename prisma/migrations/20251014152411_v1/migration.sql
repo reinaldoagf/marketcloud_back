@@ -1,15 +1,4 @@
 -- CreateTable
-CREATE TABLE `Purchase` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `businessId` INTEGER NOT NULL,
-    `amount` DOUBLE NOT NULL,
-    `status` ENUM('pending', 'paid', 'expired') NOT NULL,
-
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
 CREATE TABLE `Role` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `key` VARCHAR(191) NOT NULL,
@@ -235,20 +224,33 @@ CREATE TABLE `BusinessBranchSupplier` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `Purchase` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `businessBranchPurchaseId` INTEGER NOT NULL,
+    `productId` INTEGER NOT NULL,
+    `productPresentationId` INTEGER NULL,
+    `units` INTEGER NOT NULL,
+    `price` DOUBLE NOT NULL DEFAULT 0.0,
+    `status` ENUM('pending', 'paid', 'expired') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `BusinessBranchPurchase` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` INTEGER NULL,
     `clientName` VARCHAR(191) NULL,
     `clientCi` VARCHAR(191) NULL,
+    `userId` INTEGER NULL,
+    `businessId` INTEGER NOT NULL,
+    `branchId` INTEGER NOT NULL,
     `amount` DOUBLE NOT NULL,
     `status` ENUM('pending', 'paid', 'expired') NOT NULL DEFAULT 'pending',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- AddForeignKey
-ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `RolePermission` ADD CONSTRAINT `RolePermission_roleId_fkey` FOREIGN KEY (`roleId`) REFERENCES `Role`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -326,4 +328,19 @@ ALTER TABLE `BusinessBranchSupplier` ADD CONSTRAINT `BusinessBranchSupplier_user
 ALTER TABLE `BusinessBranchSupplier` ADD CONSTRAINT `BusinessBranchSupplier_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_businessBranchPurchaseId_fkey` FOREIGN KEY (`businessBranchPurchaseId`) REFERENCES `BusinessBranchPurchase`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_productPresentationId_fkey` FOREIGN KEY (`productPresentationId`) REFERENCES `ProductPresentation`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -59,14 +59,6 @@ enum PermissionType {
 //
 // MODELOS
 //
-model Purchase {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  businessId Int
-  business   Business  @relation(fields: [businessId], references: [id])
-  amount     Float
-  status     PurchaseStatus
-}
 
 model Role {
   id           Int               @id @default(autoincrement())
@@ -160,10 +152,11 @@ model Product {
   brand                  ProductBrand?         @relation(fields: [brandId], references: [id])
   businessId             Int?
   business               Business?             @relation(fields: [businessId], references: [id])
+  status                 ProductStatus         @default(active)
   presentations          ProductPresentation[]
   stocks                 ProductStock[]
-  status                 ProductStatus         @default(active)
   tags                   ProductTag[]
+  purchases              Purchase[]
   createdAt              DateTime              @default(now())
 }
 
@@ -173,6 +166,7 @@ model ProductPresentation {
   measurementQuantity    Float
   packing                ProductPacking  @default(bag)
   stocks                 ProductStock[]
+  purchases              Purchase[]
   productId              Int?
   product                Product?        @relation(fields: [productId], references: [id])
   createdAt              DateTime        @default(now())
@@ -247,12 +241,12 @@ model Business {
   subscriptionPlan          SubscriptionPlan? @relation(fields: [subscriptionPlanId], references: [id])
   subscriptionDate          DateTime
   expirationDate            DateTime
-  createdAt                 DateTime         @default(now())
-  purchases                 Purchase[]
+  purchases                 BusinessBranchPurchase[]
   pendings                  Pending[]
   products                  Product[]
   // relación 1:N con usuarios (empleados/miembros)
   /* users User[] @relation("BusinessUsers") */
+  createdAt                 DateTime         @default(now())
 }
 
 model BusinessBranch {
@@ -269,6 +263,7 @@ model BusinessBranch {
   clients       BusinessBranchClient[]
   suppliers     BusinessBranchSupplier[]
   pendings      Pending[]
+  purchases     BusinessBranchPurchase[]
   createdAt     DateTime  @default(now())
 }
 
@@ -300,13 +295,31 @@ model BusinessBranchSupplier {
   createdAt DateTime       @default(now())
 }
 
+model Purchase {
+  id                         Int                     @id @default(autoincrement())
+  businessBranchPurchaseId   Int
+  businessBranchPurchase     BusinessBranchPurchase  @relation(fields: [businessBranchPurchaseId], references: [id])
+  productId                  Int
+  product                    Product                 @relation(fields: [productId], references: [id])
+  productPresentationId      Int?
+  productPresentation        ProductPresentation?    @relation(fields: [productPresentationId], references: [id])
+  units                      Int
+  price                      Float                   @default(0.0)
+  createdAt                  DateTime                @default(now())
+}
+
 model BusinessBranchPurchase {
   id         Int            @id @default(autoincrement())
-  userId     Int?
-  user       User?          @relation(fields: [userId], references: [id])
   clientName String?
   clientCi   String?
+  userId     Int?
+  user       User?          @relation(fields: [userId], references: [id])
+  businessId Int
+  business   Business       @relation(fields: [businessId], references: [id])
+  branchId   Int
+  branch     BusinessBranch @relation(fields: [branchId], references: [id])
   amount     Float
   status     PurchaseStatus @default(pending)
+  purchases  Purchase[]
   createdAt  DateTime       @default(now())
 }
