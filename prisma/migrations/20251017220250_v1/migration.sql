@@ -83,12 +83,12 @@ CREATE TABLE `ProductCategory` (
 CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `status` ENUM('activo', 'inactivo', 'revisar') NOT NULL DEFAULT 'activo',
     `unitMeasurement` ENUM('litros', 'gramos') NULL DEFAULT 'gramos',
     `priceCalculation` ENUM('presentacion', 'cantidad', 'unidadDeMedida') NULL DEFAULT 'presentacion',
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
     `businessId` INTEGER NULL,
-    `status` ENUM('activo', 'inactivo', 'revisar') NOT NULL DEFAULT 'activo',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)

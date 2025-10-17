@@ -57,14 +57,13 @@ export class BusinessBranchPurchaseService {
         branchId: dto.branchId,
         amountCancelled: dto.amountCancelled,
         totalAmount: dto.totalAmount,
-        status: dto.status,
+        status: dto.amountCancelled === dto.totalAmount ? 'pagado' : dto.status,
         purchases: {
           create: dto.purchases.map((item) => ({
             productId: item.productId,
             productPresentationId: item.productPresentationId ?? null,
             units: item.units,
             price: item.price,
-            status: dto.status,
           })),
         },
       },

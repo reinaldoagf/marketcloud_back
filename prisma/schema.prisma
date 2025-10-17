@@ -147,6 +147,7 @@ model ProductCategory {
 model Product {
   id                     Int                   @id @default(autoincrement())
   name                   String
+  status                 ProductStatus         @default(activo)
   unitMeasurement        UnitMeasurement?      @default(gramos)
   priceCalculation       PriceCalculation?     @default(presentacion)
   categoryId             Int?
@@ -155,7 +156,6 @@ model Product {
   brand                  ProductBrand?         @relation(fields: [brandId], references: [id])
   businessId             Int?
   business               Business?             @relation(fields: [businessId], references: [id])
-  status                 ProductStatus         @default(activo)
   presentations          ProductPresentation[]
   stocks                 ProductStock[]
   tags                   ProductTag[]
