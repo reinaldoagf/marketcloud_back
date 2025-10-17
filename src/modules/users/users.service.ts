@@ -13,6 +13,7 @@ const SELECT_FIELDS = {
   name: true,
   email: true,
   status: true,
+  dni: true,
   createdAt: true,
   roleId: true,
   country: true,

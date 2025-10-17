@@ -11,11 +11,12 @@ export class BusinessBranchPurchaseService {
   private readonly SELECT_FIELDS = {
     id: true,
     clientName: true,
-    clientCi: true,
+    clientDNI: true,
     userId: true,
     businessId: true,
     branchId: true,
-    amount: true,
+    amountCancelled: true,
+    totalAmount: true,
     status: true,
     createdAt: true,
     branch: { select: { id: true, address: true } },
@@ -50,11 +51,12 @@ export class BusinessBranchPurchaseService {
     return this.prisma.businessBranchPurchase.create({
       data: {
         clientName: dto.clientName,
-        clientCi: dto.clientCi,
+        clientDNI: dto.clientDNI,
         userId: dto.userId,
         businessId: dto.businessId,
         branchId: dto.branchId,
-        amount: dto.amount,
+        amountCancelled: dto.amountCancelled,
+        totalAmount: dto.totalAmount,
         status: dto.status,
         purchases: {
           create: dto.purchases.map((item) => ({
@@ -91,7 +93,7 @@ export class BusinessBranchPurchaseService {
     if (search) {
       where.OR = [
         { clientName: { contains: search } },
-        { clientCi: { contains: search } },
+        { clientDNI: { contains: search } },
       ];
     }
 

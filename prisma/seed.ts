@@ -22,7 +22,7 @@ async function main(): Promise<void> {
     state: `estado bolívar`,
     city: `ciudad guayana`,
     password: hashedPassword,
-    status: UserStatus.active,
+    status: UserStatus.activo,
   }));
 
   await prisma.user.createMany({
@@ -40,7 +40,7 @@ async function main(): Promise<void> {
         state: `estado bolívar`,
         city: `ciudad guayana`,
         password: hashedPassword,
-        status: UserStatus.active,
+        status: UserStatus.activo,
         hasAllPermissions: true,
       },
     ],
@@ -52,13 +52,13 @@ async function main(): Promise<void> {
   await prisma.permission.createMany({
     data: [
       {
-        type: 'view',
+        type: 'vista',
       },
       {
-        type: 'update',
+        type: 'actualizar',
       },
       {
-        type: 'delete',
+        type: 'eliminar',
       },
     ],
     skipDuplicates: true,

@@ -12,7 +12,8 @@ CREATE TABLE `Role` (
 -- CreateTable
 CREATE TABLE `Permission` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `type` ENUM('view', 'update', 'delete') NOT NULL,
+    `type` ENUM('vista', 'actualizar', 'eliminar') NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `Permission_type_key`(`type`),
     PRIMARY KEY (`id`)
@@ -31,6 +32,7 @@ CREATE TABLE `RolePage` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `page` VARCHAR(191) NOT NULL,
     `roleId` INTEGER NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -44,7 +46,7 @@ CREATE TABLE `User` (
     `username` VARCHAR(191) NOT NULL,
     `dni` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL,
-    `status` ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    `status` ENUM('activo', 'inactivo') NOT NULL DEFAULT 'activo',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `hasAllPermissions` BOOLEAN NOT NULL DEFAULT false,
     `roleId` INTEGER NULL,
@@ -81,12 +83,12 @@ CREATE TABLE `ProductCategory` (
 CREATE TABLE `Product` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `unitMeasurement` ENUM('liters', 'grams') NULL DEFAULT 'grams',
-    `priceCalculation` ENUM('presentation', 'unitMeasurement') NULL DEFAULT 'presentation',
+    `unitMeasurement` ENUM('litros', 'gramos') NULL DEFAULT 'gramos',
+    `priceCalculation` ENUM('presentacion', 'cantidad', 'unidadDeMedida') NULL DEFAULT 'presentacion',
     `categoryId` INTEGER NULL,
     `brandId` INTEGER NULL,
     `businessId` INTEGER NULL,
-    `status` ENUM('active', 'inactive', 'review') NOT NULL DEFAULT 'active',
+    `status` ENUM('activo', 'inactivo', 'revisar') NOT NULL DEFAULT 'activo',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -97,7 +99,7 @@ CREATE TABLE `ProductPresentation` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `flavor` VARCHAR(191) NULL,
     `measurementQuantity` DOUBLE NOT NULL,
-    `packing` ENUM('bottle', 'bag', 'box', 'package') NOT NULL DEFAULT 'bag',
+    `packing` ENUM('botella', 'bolsa', 'caja', 'paquete') NOT NULL DEFAULT 'bolsa',
     `productId` INTEGER NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -231,7 +233,6 @@ CREATE TABLE `Purchase` (
     `productPresentationId` INTEGER NULL,
     `units` INTEGER NOT NULL,
     `price` DOUBLE NOT NULL DEFAULT 0.0,
-    `status` ENUM('pending', 'paid', 'expired') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -241,12 +242,13 @@ CREATE TABLE `Purchase` (
 CREATE TABLE `BusinessBranchPurchase` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `clientName` VARCHAR(191) NULL,
-    `clientCi` VARCHAR(191) NULL,
+    `clientDNI` VARCHAR(191) NULL,
     `userId` INTEGER NULL,
     `businessId` INTEGER NOT NULL,
     `branchId` INTEGER NOT NULL,
-    `amount` DOUBLE NOT NULL,
-    `status` ENUM('pending', 'paid', 'expired') NOT NULL DEFAULT 'pending',
+    `amountCancelled` DOUBLE NOT NULL,
+    `totalAmount` DOUBLE NOT NULL,
+    `status` ENUM('pendiente', 'pagado', 'caducado') NOT NULL DEFAULT 'pendiente',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)

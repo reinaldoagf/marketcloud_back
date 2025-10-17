@@ -4,11 +4,12 @@ import { PurchaseStatus } from '@prisma/client';
 export class BusinessBranchPurchaseResponseDto {
   id: number;
   clientName?: string | null;
-  clientCi?: string | null;
+  clientDNI?: string | null;
   userId?: number | null;
   businessId: number;
   branchId: number;
-  amount: number;
+  amountCancelled: number;
+  totalAmount: number;
   status: PurchaseStatus;
   createdAt: Date;
 

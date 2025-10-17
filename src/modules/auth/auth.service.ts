@@ -43,7 +43,7 @@ export class AuthService {
       city: dto.city,
       state: dto.state,
       password: hashed,
-      status: 'active', // o venir en dto si lo deseas
+      status: 'activo', // o venir en dto si lo deseas
     };
 
     const user = await this.prisma.user.create({ data, select: this.userSelect });

@@ -34,7 +34,7 @@ export class CreateBusinessBranchPurchaseDto {
 
   @IsOptional()
   @IsString()
-  clientCi?: string;
+  clientDNI?: string;
 
   @IsOptional()
   @IsInt()
@@ -47,7 +47,10 @@ export class CreateBusinessBranchPurchaseDto {
   branchId: number;
 
   @IsNumber()
-  amount: number;
+  amountCancelled: number;
+
+  @IsNumber()
+  totalAmount: number;
 
   @IsEnum(PurchaseStatus)
   status: PurchaseStatus;

@@ -133,7 +133,7 @@ export class ProductsService {
       const product = await this.prisma.product.create({
         data: {
           name: dto.name,
-          priceCalculation: dto.priceCalculation ?? 'presentation',
+          priceCalculation: dto.priceCalculation ?? 'presentacion',
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
@@ -144,7 +144,7 @@ export class ProductsService {
               }
             : undefined,
           presentations:
-            dto.priceCalculation == 'presentation' && dto.presentations?.length
+            dto.priceCalculation == 'presentacion' && dto.presentations?.length
               ? {
                   create: dto.presentations.map((p) => ({
                     flavor: p.flavor ?? null,
@@ -171,11 +171,11 @@ export class ProductsService {
         where: { id },
         data: {
           name: dto.name,
-          priceCalculation: dto.priceCalculation ?? 'presentation',
+          priceCalculation: dto.priceCalculation ?? 'presentacion',
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
-          status: dto.status ?? 'active',
+          status: dto.status ?? 'activo',
           tags: {
             // Borra las anteriores y crea las nuevas
             deleteMany: {},
@@ -186,7 +186,7 @@ export class ProductsService {
           },
 
           // 🔹 Manejo de presentaciones
-          presentations: dto.priceCalculation == 'presentation' 
+          presentations: dto.priceCalculation == 'presentacion' 
           ? {
                 // Borra las anteriores y crea las nuevas
                 deleteMany: {},
