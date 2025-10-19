@@ -306,7 +306,7 @@ model Purchase {
   product                    Product                 @relation(fields: [productId], references: [id])
   productPresentationId      Int?
   productPresentation        ProductPresentation?    @relation(fields: [productPresentationId], references: [id])
-  units                      Int
+  unitsOrMeasures            Float                   @default(1.0)
   price                      Float                   @default(0.0)
   createdAt                  DateTime                @default(now())
 }

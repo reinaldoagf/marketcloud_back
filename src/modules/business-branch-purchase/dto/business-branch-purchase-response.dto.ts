@@ -34,7 +34,7 @@ export class BusinessBranchPurchaseResponseDto {
     id: number;
     productId: number;
     productPresentationId?: number | null;
-    units: number;
+    unitsOrMeasures: number;
     price: number;
     createdAt: Date;
     product?: { id: number; name: string };

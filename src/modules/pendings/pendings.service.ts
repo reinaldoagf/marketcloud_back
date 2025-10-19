@@ -19,7 +19,6 @@ export class PendingsService {
     startDate = '',
     endDate = '',
   ): Promise<PaginatedPendingResponseDto> {
-    console.log({ status });
     const skip = (page - 1) * pageSize;
 
     const where: Prisma.PendingWhereInput = {};

@@ -231,7 +231,7 @@ CREATE TABLE `Purchase` (
     `businessBranchPurchaseId` INTEGER NOT NULL,
     `productId` INTEGER NOT NULL,
     `productPresentationId` INTEGER NULL,
-    `units` INTEGER NOT NULL,
+    `unitsOrMeasures` DOUBLE NOT NULL DEFAULT 1.0,
     `price` DOUBLE NOT NULL DEFAULT 0.0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

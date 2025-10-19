@@ -27,7 +27,7 @@ export class BusinessBranchPurchaseService {
         id: true,
         productId: true,
         productPresentationId: true,
-        units: true,
+        unitsOrMeasures: true,
         price: true,
         createdAt: true,
         product: { select: { id: true, name: true } },
@@ -62,7 +62,7 @@ export class BusinessBranchPurchaseService {
           create: dto.purchases.map((item) => ({
             productId: item.productId,
             productPresentationId: item.productPresentationId ?? null,
-            units: item.units,
+            unitsOrMeasures: item.unitsOrMeasures,
             price: item.price,
           })),
         },

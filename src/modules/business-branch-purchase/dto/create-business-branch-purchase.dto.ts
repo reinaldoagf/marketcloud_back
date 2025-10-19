@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsNumber,
+  IsPositive,
   IsEnum,
   ValidateNested,
   ArrayMinSize,
@@ -20,8 +21,9 @@ class PurchaseItemDto {
   @IsInt()
   productPresentationId?: number | null;
 
-  @IsInt()
-  units: number;
+  @IsNumber()
+  @IsPositive() // Optional: further restrict to positive floats
+  unitsOrMeasures: number;
 
   @IsNumber()
   price: number;
