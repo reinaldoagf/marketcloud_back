@@ -29,11 +29,12 @@ export class BusinessBranchPurchaseController {
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 10,
     @Query('search') search = '',
+    @Query('status') status = '',
     @Query('dateKey') dateKey = 'createdAt',
     @Query('startDate') startDate = '',
     @Query('endDate') endDate = '',
   ): Promise<PaginatedBusinessBranchPurchaseResponseDto> {
-    return this.service.getByFilters(branchId, +page, +pageSize, search, dateKey, startDate, endDate);
+    return this.service.getByFilters(branchId, +page, +pageSize, search, status, dateKey, startDate, endDate);
   }
 
   @Delete(':id')

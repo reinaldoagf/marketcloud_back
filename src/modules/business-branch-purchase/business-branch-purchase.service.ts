@@ -21,7 +21,7 @@ export class BusinessBranchPurchaseService {
     createdAt: true,
     branch: { select: { id: true, address: true } },
     business: { select: { id: true, name: true } },
-    user: { select: { id: true, name: true, email: true } },
+    user: { select: { id: true, name: true, email: true, avatar: true } },
     purchases: {
       select: {
         id: true,
@@ -76,6 +76,7 @@ export class BusinessBranchPurchaseService {
     page = 1,
     pageSize = 10,
     search = '',
+    status = '',
     dateKey = 'createdAt',
     startDate = '',
     endDate = '',
@@ -94,6 +95,10 @@ export class BusinessBranchPurchaseService {
         { clientName: { contains: search } },
         { clientDNI: { contains: search } },
       ];
+    }
+
+    if (status && status !== 'Todos') {
+      where.status = status as any; // casteamos porque viene como string
     }
 
     if (startDate && endDate) {
