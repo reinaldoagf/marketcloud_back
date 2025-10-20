@@ -8,6 +8,8 @@ import { PaginatedProductStockResponseDto } from './dto/paginated-product-stock-
 const SELECT_FIELDS = {
   id: true,
   units: true,
+  priceByUnit: true,
+  availableQuantity: true,
   priceByMeasurement: true,
   quantityPerMeasure: true,
   totalSellingPrice: true,
@@ -118,7 +120,9 @@ export class ProductStockService {
       return await this.prisma.productStock.create({
         data: {
           units: dto.units,
-          priceByMeasurement: dto.priceByMeasurement,
+          priceByUnit: dto.priceByUnit ?? 0,
+          availableQuantity: dto.availableQuantity ?? 0,
+          priceByMeasurement: dto.priceByMeasurement ?? 0,
           quantityPerMeasure: dto.quantityPerMeasure ?? 0,
           totalSellingPrice: dto.totalSellingPrice,
           purchasePricePerUnit: dto.purchasePricePerUnit,

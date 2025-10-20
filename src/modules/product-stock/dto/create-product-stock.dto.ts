@@ -5,6 +5,16 @@ export class CreateProductStockDto {
   @Min(0)
   units: number;
 
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  priceByUnit?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  availableQuantity?: number;
+
   @IsNumber()
   @Min(0)
   priceByMeasurement: number;

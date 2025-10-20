@@ -120,7 +120,9 @@ CREATE TABLE `ProductTag` (
 CREATE TABLE `ProductStock` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `units` INTEGER NOT NULL DEFAULT 0,
-    `priceByMeasurement` DOUBLE NOT NULL DEFAULT 0.0,
+    `priceByUnit` DOUBLE NULL DEFAULT 0.0,
+    `availableQuantity` DOUBLE NULL DEFAULT 0.0,
+    `priceByMeasurement` DOUBLE NULL DEFAULT 0.0,
     `quantityPerMeasure` DOUBLE NULL DEFAULT 0.0,
     `totalSellingPrice` DOUBLE NOT NULL DEFAULT 0.0,
     `purchasePricePerUnit` DOUBLE NOT NULL DEFAULT 0.0,

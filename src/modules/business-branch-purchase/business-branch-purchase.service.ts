@@ -3,10 +3,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateBusinessBranchPurchaseDto } from './dto/create-business-branch-purchase.dto';
 import { PaginatedBusinessBranchPurchaseResponseDto } from './dto/paginated-business-branch-purchase-response.dto';
 import { Prisma } from '@prisma/client';
+import { ClientsService } from '../clients/clients.service';
 
 @Injectable()
 export class BusinessBranchPurchaseService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private clientsService: ClientsService,
+  ) {}
 
   private readonly SELECT_FIELDS = {
     id: true,
@@ -31,7 +35,9 @@ export class BusinessBranchPurchaseService {
         price: true,
         createdAt: true,
         product: { select: { id: true, name: true } },
-        productPresentation: { select: { id: true, measurementQuantity: true, flavor: true, packing: true } },
+        productPresentation: {
+          select: { id: true, measurementQuantity: true, flavor: true, packing: true },
+        },
       },
     },
   };
@@ -45,6 +51,17 @@ export class BusinessBranchPurchaseService {
 
     if (!dto.purchases || dto.purchases.length === 0) {
       throw new BadRequestException('At least one purchase item is required.');
+    }
+
+    if (dto.amountCancelled < dto.totalAmount && dto.branchId && dto.userId) {
+      // Validar si ya existe
+      const existing = await this.prisma.businessBranchClient.findFirst({
+        where: { branchId: dto.branchId, userId: dto.userId },
+      });
+
+      if (!existing) {
+        await this.clientsService.addClient({ branchId: dto.branchId, userId: dto.userId });
+      }
     }
 
     // Crear la compra con sus detalles
@@ -91,10 +108,7 @@ export class BusinessBranchPurchaseService {
     }
 
     if (search) {
-      where.OR = [
-        { clientName: { contains: search } },
-        { clientDNI: { contains: search } },
-      ];
+      where.OR = [{ clientName: { contains: search } }, { clientDNI: { contains: search } }];
     }
 
     if (status && status !== 'Todos') {

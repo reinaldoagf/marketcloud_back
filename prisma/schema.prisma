@@ -187,7 +187,9 @@ model ProductTag {
 model ProductStock {
   id                     Int                   @id @default(autoincrement())
   units                  Int                   @default(0)
-  priceByMeasurement     Float                 @default(0.0)
+  priceByUnit            Float?                @default(0.0)
+  availableQuantity      Float?                @default(0.0)
+  priceByMeasurement     Float?                @default(0.0)
   quantityPerMeasure     Float?                @default(0.0)
   totalSellingPrice      Float                 @default(0.0)
   purchasePricePerUnit   Float                 @default(0.0)

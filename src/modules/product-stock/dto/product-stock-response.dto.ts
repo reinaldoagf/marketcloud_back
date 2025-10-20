@@ -5,7 +5,9 @@ import { ProductPresentationDto } from '../../products/dto/product-response.dto'
 export class ProductStockResponseDto {
   id: number;
   units: number;
-  priceByMeasurement: number;
+  priceByUnit: number | null;
+  availableQuantity: number | null;
+  priceByMeasurement: number | null;
   quantityPerMeasure: number | null;
   totalSellingPrice: number;
   purchasePricePerUnit: number;
