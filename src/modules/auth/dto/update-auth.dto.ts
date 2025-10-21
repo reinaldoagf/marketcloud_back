@@ -21,6 +21,11 @@ export class UpdateAuthDto {
   @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
+  dniFile?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
   country?: string;
 
   @ApiProperty({ required: false })

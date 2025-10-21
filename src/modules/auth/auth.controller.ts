@@ -48,18 +48,19 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Patch('update')
   @UseInterceptors(
-    FileInterceptor('dniFile', {
+    FileInterceptor('avatar', {
       storage: diskStorage({
-        destination: './uploads/dnis', // 📂 carpeta donde se guardan
+        destination: './uploads/avatars', // 📂 carpeta donde se guardan
         filename: (req, file, cb) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           cb(null, `${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
-    }),
+    })
   ) // opcional, si envías archivo "dniFile"
-  async updateProfile(@Req() req: any, @Body() dto: UpdateAuthDto) {
+  async updateProfile(@Req() req: any, @Body() dto: UpdateAuthDto, @UploadedFile() file?: Express.Multer.File) {
     const userId = req.user.sub; // viene del payload del JWT
+    if (file) dto.avatar = file.filename; // ruta donde guardas el archivo
     return this.service.updateProfile(userId, dto);
   }
 }
