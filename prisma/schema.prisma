@@ -104,6 +104,7 @@ model User {
   email                 String          @unique
   username              String          @unique
   dni                   String?         @unique
+  dniFile               String?
   password              String    
   status                UserStatus      @default(activo)
   createdAt             DateTime        @default(now())

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MinLength, IsEnum, Matches, IsNotEmpty, Length } from 'class-validator';
+import { IsEmail, IsString, MinLength, IsEnum, Matches, IsNotEmpty, Length, IsOptional } from 'class-validator';
 import { UserStatus } from '@prisma/client'; // importamos el enum de Prisma
 
 export class CreateUserDto {
@@ -18,6 +18,10 @@ export class CreateUserDto {
   @IsNotEmpty()
   @Length(6, 20, { message: 'El DNI debe tener entre 6 y 20 caracteres' })
   dni: string;
+
+  @IsOptional()
+  @IsString()
+  dniFile?: string;
 
   @IsString()
   @IsNotEmpty()
