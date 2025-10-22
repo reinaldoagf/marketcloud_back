@@ -25,6 +25,7 @@ export class BusinessBranchPurchaseController {
 
   @Get()
   getByFilters(
+    @Query('userId', ParseIntPipe) userId: number,
     @Query('branchId', ParseIntPipe) branchId: number,
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 10,
@@ -34,7 +35,7 @@ export class BusinessBranchPurchaseController {
     @Query('startDate') startDate = '',
     @Query('endDate') endDate = '',
   ): Promise<PaginatedBusinessBranchPurchaseResponseDto> {
-    return this.service.getByFilters(branchId, +page, +pageSize, search, status, dateKey, startDate, endDate);
+    return this.service.getByFilters(userId, branchId, +page, +pageSize, search, status, dateKey, startDate, endDate);
   }
 
   @Delete(':id')

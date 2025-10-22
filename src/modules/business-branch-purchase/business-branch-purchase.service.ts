@@ -89,6 +89,7 @@ export class BusinessBranchPurchaseService {
   }
 
   async getByFilters(
+    userId: number,
     branchId: number,
     page = 1,
     pageSize = 10,
@@ -100,6 +101,12 @@ export class BusinessBranchPurchaseService {
   ): Promise<PaginatedBusinessBranchPurchaseResponseDto> {
     const skip = (page - 1) * pageSize;
     const where: Prisma.BusinessBranchPurchaseWhereInput = {};
+
+    if (userId) {
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
+      where.userId = userId;
+    }
 
     if (branchId) {
       const branch = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
