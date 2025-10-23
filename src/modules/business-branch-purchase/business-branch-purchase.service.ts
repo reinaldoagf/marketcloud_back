@@ -4,6 +4,7 @@ import { CreateBusinessBranchPurchaseDto } from './dto/create-business-branch-pu
 import { PaginatedBusinessBranchPurchaseResponseDto } from './dto/paginated-business-branch-purchase-response.dto';
 import { Prisma } from '@prisma/client';
 import { ClientsService } from '../clients/clients.service';
+import { PurchaseStatus } from '@prisma/client';
 
 @Injectable()
 export class BusinessBranchPurchaseService {
@@ -164,5 +165,76 @@ export class BusinessBranchPurchaseService {
     await this.prisma.businessBranchPurchase.delete({ where: { id } });
 
     return { message: `Purchase ${id} and its items were deleted successfully.` };
+  }
+
+  async getPurchaseSummaryByUser(userId: number) {
+    if (!userId) throw new BadRequestException('User ID is required');
+
+    const purchases = await this.prisma.businessBranchPurchase.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        status: true,
+        totalAmount: true,
+        amountCancelled: true,
+        expiredDate: true,
+        createdAt: true,
+      },
+    });
+
+    if (!purchases.length) {
+      return {
+        totalPurchases: 0,
+        completed: 0,
+        pending: 0,
+        expired: 0,
+        totalAmount: 0,
+        completedAmount: 0,
+        pendingAmount: 0,
+        expiredAmount: 0,
+      };
+    }
+
+    const now = new Date();
+
+    const totalPurchases = purchases.length;
+    let completed = 0;
+    let pending = 0;
+    let expired = 0;
+    let totalAmount = 0;
+    let completedAmount = 0;
+    let pendingAmount = 0;
+    let expiredAmount = 0;
+
+    for (const purchase of purchases) {
+      const remaining = purchase.totalAmount - purchase.amountCancelled;
+      totalAmount += purchase.totalAmount;
+
+      if (purchase.status === 'pagado') {
+        completed++;
+        completedAmount += purchase.totalAmount; // 💰 suma total de compras completadas
+      } else if (
+        purchase.status === 'pendiente' &&
+        purchase.expiredDate &&
+        purchase.expiredDate < now
+      ) {
+        expired++;
+        expiredAmount += remaining > 0 ? remaining : 0; // 💰 suma de montos vencidos no cancelados
+      } else if (purchase.status === 'pendiente') {
+        pending++;
+        pendingAmount += remaining > 0 ? remaining : 0;
+      }
+    }
+
+    return {
+      totalPurchases,
+      completed,
+      pending,
+      expired,
+      totalAmount,
+      completedAmount,
+      pendingAmount,
+      expiredAmount,
+    };
   }
 }

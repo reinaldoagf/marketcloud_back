@@ -251,6 +251,7 @@ CREATE TABLE `BusinessBranchPurchase` (
     `branchId` INTEGER NOT NULL,
     `amountCancelled` DOUBLE NOT NULL,
     `totalAmount` DOUBLE NOT NULL,
+    `expiredDate` DATETIME(3) NULL,
     `status` ENUM('pendiente', 'pagado', 'caducado') NOT NULL DEFAULT 'pendiente',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 

@@ -42,5 +42,9 @@ export class BusinessBranchPurchaseController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.service.deleteById(id);
   }
-
+  // 📊 Obtener resumen de compras por usuario
+  @Get('summary')
+  async getPurchaseSummary(@Query('userId', ParseIntPipe) userId: number) {
+    return this.service.getPurchaseSummaryByUser(userId);
+  }
 }
