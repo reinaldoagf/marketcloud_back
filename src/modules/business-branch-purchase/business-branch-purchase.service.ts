@@ -5,6 +5,7 @@ import { PaginatedBusinessBranchPurchaseResponseDto } from './dto/paginated-busi
 import { Prisma } from '@prisma/client';
 import { ClientsService } from '../clients/clients.service';
 import { PurchaseStatus } from '@prisma/client';
+import { UpdateBusinessBranchPurchaseDto } from './dto/update-business-branch-purchase.dto';
 
 @Injectable()
 export class BusinessBranchPurchaseService {
@@ -116,7 +117,18 @@ export class BusinessBranchPurchaseService {
     }
 
     if (search) {
-      where.OR = [{ clientName: { contains: search } }, { clientDNI: { contains: search } }];
+      where.OR = [
+        { user: { name: { contains: search } } },
+        { user: { email: { contains: search } } },
+        { user: { username: { contains: search } } },
+        { user: { dni: { contains: search } } },
+        { branch: { country: { contains: search } } },
+        { branch: { state: { contains: search } } },
+        { branch: { city: { contains: search } } },
+        { branch: { address: { contains: search } } },
+        { clientName: { contains: search } },
+        { clientDNI: { contains: search } },
+      ];
     }
 
     if (status && status !== 'Todos') {
@@ -236,5 +248,21 @@ export class BusinessBranchPurchaseService {
       pendingAmount,
       expiredAmount,
     };
+  }
+
+  async update(id: number, dto: UpdateBusinessBranchPurchaseDto) {
+    const purchase = await this.prisma.businessBranchPurchase.findUnique({ where: { id } });
+
+    if (!purchase) {
+      throw new NotFoundException(`BusinessBranchPurchase with ID ${id} not found`);
+    }
+
+    return this.prisma.businessBranchPurchase.update({
+      where: { id },
+      data: {
+        amountCancelled: dto.amountCancelled ?? purchase.amountCancelled,
+        status: dto.amountCancelled == purchase.totalAmount ? 'pagado' : purchase.status,
+      },
+    });
   }
 }

@@ -8,11 +8,13 @@ import {
   Delete,
   Param,
   ParseIntPipe,
+  Req,
+  Patch,
 } from '@nestjs/common';
 import { CreateBusinessBranchPurchaseDto } from './dto/create-business-branch-purchase.dto';
 import { PaginatedBusinessBranchPurchaseResponseDto } from './dto/paginated-business-branch-purchase-response.dto';
 import { BusinessBranchPurchaseService } from './business-branch-purchase.service';
-
+import { UpdateBusinessBranchPurchaseDto } from './dto/update-business-branch-purchase.dto';
 
 @Controller('business-branch-purchase')
 export class BusinessBranchPurchaseController {
@@ -35,7 +37,17 @@ export class BusinessBranchPurchaseController {
     @Query('startDate') startDate = '',
     @Query('endDate') endDate = '',
   ): Promise<PaginatedBusinessBranchPurchaseResponseDto> {
-    return this.service.getByFilters(userId, branchId, +page, +pageSize, search, status, dateKey, startDate, endDate);
+    return this.service.getByFilters(
+      userId,
+      branchId,
+      +page,
+      +pageSize,
+      search,
+      status,
+      dateKey,
+      startDate,
+      endDate,
+    );
   }
 
   @Delete(':id')
@@ -46,5 +58,12 @@ export class BusinessBranchPurchaseController {
   @Get('summary')
   async getPurchaseSummary(@Query('userId', ParseIntPipe) userId: number) {
     return this.service.getPurchaseSummaryByUser(userId);
+  }
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateBusinessBranchPurchaseDto,
+  ) {
+    return this.service.update(id, dto);
   }
 }
