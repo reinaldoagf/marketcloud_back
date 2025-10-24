@@ -31,6 +31,9 @@ export class BusinessService {
   constructor(private prisma: PrismaService) {}
 
   async getByFilters(
+    country = '',
+    state = '',
+    city = '',
     page = 1,
     pageSize = 10,
     search = '',
@@ -59,6 +62,20 @@ export class BusinessService {
     } else if (endDate) {
       where[dateKey] = {
         lte: new Date(endDate),
+      };
+    }
+
+    // 📍 Filtros geográficos: buscamos negocios con branches que coincidan
+    const branchFilter: Prisma.BusinessBranchWhereInput = {};
+    
+    if (country) branchFilter.country = { equals: country };
+    if (state) branchFilter.state = { equals: state };
+    if (city) branchFilter.city = { equals: city };
+
+    // Si hay al menos un filtro de localización, lo añadimos al where principal
+    if (Object.keys(branchFilter).length > 0) {
+      where.branches = {
+        some: branchFilter,
       };
     }
 
@@ -143,6 +160,37 @@ export class BusinessService {
 
     // 🔹 Si existen dependencias (ejemplo: pendings ligados a branchId), borrarlas primero
     if (branchIds.length > 0) {
+      // 🔹 Buscar todas las compras asociadas a esos branches
+      const purchases = await this.prisma.businessBranchPurchase.findMany({
+        where: { branchId: { in: branchIds } },
+        select: { id: true },
+      });
+
+      const purchaseIds = purchases.map((p) => p.id);
+
+      // 🧩 Eliminar los registros dependientes en orden inverso
+      if (purchaseIds.length > 0) {
+        await this.prisma.purchase.deleteMany({
+          where: { businessBranchPurchaseId: { in: purchaseIds } },
+        });
+
+        await this.prisma.businessBranchPurchase.deleteMany({
+          where: { id: { in: purchaseIds } },
+        });
+      }
+
+      await this.prisma.productStock.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+      await this.prisma.businessBranchCollaborator.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+      await this.prisma.businessBranchClient.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
+      await this.prisma.businessBranchSupplier.deleteMany({
+        where: { branchId: { in: branchIds } },
+      });
       await this.prisma.pending.deleteMany({
         where: { branchId: { in: branchIds } },
       });

@@ -24,6 +24,9 @@ export class BusinessController {
 
   @Get('/')
   async getByFilters(
+    @Query('country') country = '',
+    @Query('state') state = '',
+    @Query('city') city = '',
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -32,6 +35,9 @@ export class BusinessController {
     @Query('endDate') endDate = '',
   ): Promise<PaginatedBusinessResponseDto> {
     return this.service.getByFilters(
+      country,
+      state,
+      city,
       Number(page),
       Number(pageSize),
       search,
