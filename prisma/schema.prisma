@@ -155,8 +155,8 @@ model Product {
   category               ProductCategory?      @relation(fields: [categoryId], references: [id])
   brandId                Int?
   brand                  ProductBrand?         @relation(fields: [brandId], references: [id])
-  businessId             Int?
-  business               Business?             @relation(fields: [businessId], references: [id])
+  branchId               Int?
+  branch                 BusinessBranch?       @relation(fields: [branchId], references: [id])
   presentations          ProductPresentation[]
   stocks                 ProductStock[]
   tags                   ProductTag[]
@@ -249,7 +249,6 @@ model Business {
   expirationDate            DateTime
   purchases                 BusinessBranchPurchase[]
   pendings                  Pending[]
-  products                  Product[]
   // relación 1:N con usuarios (empleados/miembros)
   /* users User[] @relation("BusinessUsers") */
   createdAt                 DateTime         @default(now())
@@ -270,6 +269,7 @@ model BusinessBranch {
   suppliers     BusinessBranchSupplier[]
   pendings      Pending[]
   purchases     BusinessBranchPurchase[]
+  products      Product[]
   createdAt     DateTime  @default(now())
 }
 

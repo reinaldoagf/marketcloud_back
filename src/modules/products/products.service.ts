@@ -13,7 +13,7 @@ const SELECT_FIELDS = {
   createdAt: true,
   brandId: true,
   categoryId: true,
-  businessId: true,
+  branchId: true,
   priceCalculation: true,
   unitMeasurement: true,
   brand: {
@@ -22,8 +22,8 @@ const SELECT_FIELDS = {
   category: {
     select: { id: true, name: true, createdAt: true },
   },
-  business: {
-    select: { id: true, name: true, rif: true, createdAt: true },
+  branch: {
+    select: { id: true, country: true, state: true, city: true, address: true, createdAt: true },
   },
   stocks: {
     select: {
@@ -60,6 +60,7 @@ export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async getByFilters(
+    branchId?: number | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -76,9 +77,16 @@ export class ProductsService {
     if (search) {
       where.OR = [{ name: { contains: search } }];
     }
-
-    if (status && status !== 'Todos') {
-      where.status = status as any; // casteamos porque viene como string
+    // 🔹 Filtro por businessId si existe
+    if (branchId) {
+      where.OR = [
+      { branchId: branchId },
+      { status: 'activo' },
+    ];
+    } else {
+      if (status && status !== 'Todos') {
+        where.status = status as any; // casteamos porque viene como string
+      }
     }
 
     if (startDate && endDate) {
@@ -137,11 +145,10 @@ export class ProductsService {
           unitMeasurement: dto.unitMeasurement,
           brandId: dto.brandId ?? null,
           categoryId: dto.categoryId ?? null,
-          status: dto.status ?? null,
+          branchId: dto.branchId ?? null,
+          status: dto.branchId ? 'revisar' : (dto.status ?? null),
           tags: dto.tags?.length
-            ? {
-                create: dto.tags.map((p) => ({ tag: p.tag ?? null })),
-              }
+            ? { create: dto.tags.map((p) => ({ tag: p.tag ?? null })) }
             : undefined,
           presentations:
             dto.priceCalculation == 'presentacion' && dto.presentations?.length
