@@ -20,6 +20,7 @@ const SELECT_FIELDS = {
   country: true,
   state: true,
   city: true,
+  avatar: true,
   businessId: true,
 };
 
