@@ -23,7 +23,7 @@ export class ProductsController {
 
   @Get('/')
   async getByFilters(
-    @Query('branchId', ParseIntPipe) branchId = null,
+    @Query('businessId', ParseIntPipe) businessId = null,
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -33,7 +33,7 @@ export class ProductsController {
     @Query('endDate') endDate = '',
   ): Promise<PaginatedProductResponseDto> {
     return this.service.getByFilters(
-      branchId,
+      businessId,
       Number(page),
       Number(pageSize),
       search,

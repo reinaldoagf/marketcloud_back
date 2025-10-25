@@ -38,7 +38,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsInt()
   @Type(() => Number)
-  branchId?: number;
+  businessId?: number;
 
   @ApiPropertyOptional({ type: [CreateProductTagDto] })
   @IsOptional()
