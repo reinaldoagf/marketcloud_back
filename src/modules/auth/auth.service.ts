@@ -56,6 +56,24 @@ export class AuthService {
 
     const user = await this.prisma.user.create({ data, select: SELECT_FIELDS });
 
+    // 🔹 Vincular compras existentes por DNI (si las hay)
+    const purchases = await this.prisma.businessBranchPurchase.findMany({
+      where: { clientDNI: dto.dni },
+      select: { id: true },
+    });
+
+    if (purchases.length > 0) {
+      // Ejecutar todas las actualizaciones en paralelo
+      await Promise.all(
+        purchases.map((p) =>
+          this.prisma.businessBranchPurchase.update({
+            where: { id: p.id },
+            data: { userId: user.id },
+          }),
+        ),
+      );
+    }
+
     const token = this.signToken(user.id, user.email);
     return { access_token: token, user };
   }
