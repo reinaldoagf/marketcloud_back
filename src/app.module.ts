@@ -14,6 +14,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ProductStockModule } from './modules/product-stock/product-stock.module';
 import { BusinessBranchPurchaseModule } from './modules/business-branch-purchase/business-branch-purchase.module';
+import { MetricsModule } from './modules/metrics/metrics.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { BusinessBranchPurchaseModule } from './modules/business-branch-purchase
     ProductsModule,
     ProductStockModule,
     BusinessBranchPurchaseModule,
+    MetricsModule,
   ],
   providers: [],
 })

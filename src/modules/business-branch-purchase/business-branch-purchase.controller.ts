@@ -55,8 +55,12 @@ export class BusinessBranchPurchaseController {
   }
   // 📊 Obtener resumen de compras por usuario
   @Get('summary')
-  async getPurchaseSummary(@Query('userId', ParseIntPipe) userId: number) {
-    return this.service.getPurchaseSummaryByUser(userId);
+  async getPurchaseSummary(
+    @Query('businessId', ParseIntPipe) businessId = null,
+    @Query('branchId', ParseIntPipe) branchId = null,
+    @Query('userId', ParseIntPipe) userId = null,
+  ) {
+    return this.service.getPurchaseSummaryByFilters(businessId, branchId, userId);
   }
   @Patch(':id')
   async update(

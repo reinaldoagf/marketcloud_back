@@ -26,7 +26,7 @@ export class BusinessBranchPurchaseService {
     status: true,
     createdAt: true,
     branch: { select: { id: true, address: true } },
-    business: { select: { id: true, name: true } },
+    business: { select: { id: true, name: true, rif: true, logo: true } },
     user: { select: { id: true, name: true, email: true, avatar: true } },
     purchases: {
       select: {
@@ -122,6 +122,7 @@ export class BusinessBranchPurchaseService {
         { user: { email: { contains: search } } },
         { user: { username: { contains: search } } },
         { user: { dni: { contains: search } } },
+        { business: { name: { contains: search } } },
         { branch: { country: { contains: search } } },
         { branch: { state: { contains: search } } },
         { branch: { city: { contains: search } } },
@@ -179,11 +180,27 @@ export class BusinessBranchPurchaseService {
     return { message: `Purchase ${id} and its items were deleted successfully.` };
   }
 
-  async getPurchaseSummaryByUser(userId: number) {
-    if (!userId) throw new BadRequestException('User ID is required');
+  async getPurchaseSummaryByFilters(
+    businessId?: number | null,
+    branchId?: number | null,
+    userId?: number | null,
+  ) {
+    if (!userId && !businessId && !branchId) {
+      throw new BadRequestException(
+        'Debe enviar al menos un identificador (userId, businessId o branchId)',
+      );
+    }
 
+    // 🔹 Construimos filtros dinámicos
+    const where: any = {};
+
+    if (userId) where.userId = userId;
+    if (businessId) where.businessId = businessId;
+    if (branchId) where.branchId = branchId;
+
+    // 🔹 Buscamos las compras filtradas
     const purchases = await this.prisma.businessBranchPurchase.findMany({
-      where: { userId },
+      where,
       select: {
         id: true,
         status: true,
@@ -207,9 +224,8 @@ export class BusinessBranchPurchaseService {
       };
     }
 
+    // 🔹 Inicializamos métricas
     const now = new Date();
-
-    const totalPurchases = purchases.length;
     let completed = 0;
     let pending = 0;
     let expired = 0;
@@ -218,28 +234,32 @@ export class BusinessBranchPurchaseService {
     let pendingAmount = 0;
     let expiredAmount = 0;
 
+    // 🔹 Recorremos las compras para calcular métricas
     for (const purchase of purchases) {
-      const remaining = purchase.totalAmount - purchase.amountCancelled;
+      const remaining = purchase.totalAmount - (purchase.amountCancelled ?? 0);
       totalAmount += purchase.totalAmount;
 
-      if (purchase.status === 'pagado') {
-        completed++;
-        completedAmount += purchase.totalAmount; // 💰 suma total de compras completadas
-      } else if (
-        purchase.status === 'pendiente' &&
-        purchase.expiredDate &&
-        purchase.expiredDate < now
-      ) {
-        expired++;
-        expiredAmount += remaining > 0 ? remaining : 0; // 💰 suma de montos vencidos no cancelados
-      } else if (purchase.status === 'pendiente') {
-        pending++;
-        pendingAmount += remaining > 0 ? remaining : 0;
+      switch (purchase.status) {
+        case 'pagado':
+          completed++;
+          completedAmount += purchase.totalAmount;
+          break;
+
+        case 'pendiente':
+          if (purchase.expiredDate && purchase.expiredDate < now) {
+            expired++;
+            expiredAmount += Math.max(remaining, 0);
+          } else {
+            pending++;
+            pendingAmount += Math.max(remaining, 0);
+          }
+          break;
       }
     }
 
+    // 🔹 Devolvemos el resumen
     return {
-      totalPurchases,
+      totalPurchases: purchases.length,
       completed,
       pending,
       expired,
