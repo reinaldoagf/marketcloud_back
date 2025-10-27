@@ -3,7 +3,7 @@ import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
 export class MetricsController {
-  constructor(private metricsService: MetricsService) {}
+  constructor(private service: MetricsService) {}
 
   @Get('purchases-by-category')
   async getPurchasesByCategory(
@@ -13,12 +13,23 @@ export class MetricsController {
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
   ) {
-    return this.metricsService.getPurchasesByCategory(
+    return this.service.getPurchasesByCategory(
       businessId,
       branchId,
       Number(userId),
       startDate,
       endDate,
+    );
+  }
+
+  @Get('investments-by-category')
+  async getInvestmentsByCategory(
+    @Query('businessId') businessId?: string,
+    @Query('branchId') branchId?: string,
+  ) {
+    return this.service.getInvestmentsByCategory(
+      businessId ? Number(businessId) : undefined,
+      branchId ? Number(branchId) : undefined,
     );
   }
 }
