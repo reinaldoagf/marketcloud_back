@@ -27,7 +27,8 @@
     "m:gen:dev": "export NODE_ENV=develop && npm run prisma:generate",
     "m:run:dev": "export NODE_ENV=develop && npm run prisma:migrate:dev",
     "m:gen": "export NODE_ENV=production && npm run prisma:generate",
-    "m:run": "export NODE_ENV=production && npm run prisma:migrate:deploy && npm run seed"
+    "m:mig": "export NODE_ENV=production && npm run prisma:migrate:deploy && npm run seed",
+    "m:run": "export NODE_ENV=production && pm2 start dist/main.js --name servimarket-api"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
