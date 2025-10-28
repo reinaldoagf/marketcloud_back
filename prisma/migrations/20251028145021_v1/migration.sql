@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE `Role` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `key` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -11,7 +11,7 @@ CREATE TABLE `Role` (
 
 -- CreateTable
 CREATE TABLE `Permission` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `type` ENUM('vista', 'actualizar', 'eliminar') NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -21,17 +21,17 @@ CREATE TABLE `Permission` (
 
 -- CreateTable
 CREATE TABLE `RolePermission` (
-    `roleId` INTEGER NOT NULL,
-    `permissionId` INTEGER NOT NULL,
+    `roleId` VARCHAR(191) NOT NULL,
+    `permissionId` VARCHAR(191) NOT NULL,
 
     PRIMARY KEY (`roleId`, `permissionId`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `RolePage` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `page` VARCHAR(191) NOT NULL,
-    `roleId` INTEGER NOT NULL,
+    `roleId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -39,7 +39,7 @@ CREATE TABLE `RolePage` (
 
 -- CreateTable
 CREATE TABLE `User` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `avatar` VARCHAR(191) NULL,
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
@@ -48,13 +48,13 @@ CREATE TABLE `User` (
     `dniFile` VARCHAR(191) NULL,
     `password` VARCHAR(191) NOT NULL,
     `status` ENUM('activo', 'inactivo') NOT NULL DEFAULT 'activo',
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `hasAllPermissions` BOOLEAN NOT NULL DEFAULT false,
-    `roleId` INTEGER NULL,
+    `roleId` VARCHAR(191) NULL,
     `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
     `state` VARCHAR(191) NOT NULL,
     `city` VARCHAR(191) NOT NULL,
     `businessId` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `User_email_key`(`email`),
     UNIQUE INDEX `User_username_key`(`username`),
@@ -64,7 +64,7 @@ CREATE TABLE `User` (
 
 -- CreateTable
 CREATE TABLE `ProductBrand` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -73,7 +73,7 @@ CREATE TABLE `ProductBrand` (
 
 -- CreateTable
 CREATE TABLE `ProductCategory` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -82,14 +82,14 @@ CREATE TABLE `ProductCategory` (
 
 -- CreateTable
 CREATE TABLE `Product` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `status` ENUM('activo', 'inactivo', 'revisar') NOT NULL DEFAULT 'activo',
     `unitMeasurement` ENUM('litros', 'gramos') NULL DEFAULT 'gramos',
     `priceCalculation` ENUM('presentacion', 'cantidad', 'unidadDeMedida') NULL DEFAULT 'presentacion',
-    `categoryId` INTEGER NULL,
-    `brandId` INTEGER NULL,
-    `businessId` INTEGER NULL,
+    `categoryId` VARCHAR(191) NULL,
+    `brandId` VARCHAR(191) NULL,
+    `businessId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -97,11 +97,11 @@ CREATE TABLE `Product` (
 
 -- CreateTable
 CREATE TABLE `ProductPresentation` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `flavor` VARCHAR(191) NULL,
     `measurementQuantity` DOUBLE NOT NULL,
     `packing` ENUM('botella', 'bolsa', 'caja', 'paquete') NOT NULL DEFAULT 'bolsa',
-    `productId` INTEGER NULL,
+    `productId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -109,9 +109,9 @@ CREATE TABLE `ProductPresentation` (
 
 -- CreateTable
 CREATE TABLE `ProductTag` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `tag` VARCHAR(191) NOT NULL,
-    `productId` INTEGER NOT NULL,
+    `productId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -119,7 +119,7 @@ CREATE TABLE `ProductTag` (
 
 -- CreateTable
 CREATE TABLE `ProductStock` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `units` INTEGER NOT NULL DEFAULT 0,
     `priceByUnit` DOUBLE NULL DEFAULT 0.0,
     `availableQuantity` DOUBLE NULL DEFAULT 0.0,
@@ -129,9 +129,9 @@ CREATE TABLE `ProductStock` (
     `purchasePricePerUnit` DOUBLE NOT NULL DEFAULT 0.0,
     `profitPercentage` DOUBLE NOT NULL DEFAULT 0.0,
     `returnOnInvestment` DOUBLE NOT NULL DEFAULT 0.0,
-    `productPresentationId` INTEGER NULL,
-    `productId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
+    `productPresentationId` VARCHAR(191) NULL,
+    `productId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `ProductStock_productId_branchId_productPresentationId_key`(`productId`, `branchId`, `productPresentationId`),
@@ -140,14 +140,14 @@ CREATE TABLE `ProductStock` (
 
 -- CreateTable
 CREATE TABLE `Pending` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `message` VARCHAR(191) NOT NULL,
     `eventDate` DATETIME(3) NULL,
-    `businessId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
-    `createdById` INTEGER NULL,
-    `linkedUserId` INTEGER NULL,
+    `businessId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
+    `createdById` VARCHAR(191) NULL,
+    `linkedUserId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -155,7 +155,7 @@ CREATE TABLE `Pending` (
 
 -- CreateTable
 CREATE TABLE `SubscriptionPlan` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `title` VARCHAR(191) NOT NULL,
     `price` DOUBLE NOT NULL,
     `quantityProducts` INTEGER NULL,
@@ -168,13 +168,13 @@ CREATE TABLE `SubscriptionPlan` (
 
 -- CreateTable
 CREATE TABLE `Business` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `rif` VARCHAR(191) NULL,
     `logo` VARCHAR(191) NULL,
-    `ownerId` INTEGER NOT NULL,
+    `ownerId` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `description` VARCHAR(191) NOT NULL,
-    `subscriptionPlanId` INTEGER NULL,
+    `subscriptionPlanId` VARCHAR(191) NULL,
     `subscriptionDate` DATETIME(3) NOT NULL,
     `expirationDate` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -185,8 +185,8 @@ CREATE TABLE `Business` (
 
 -- CreateTable
 CREATE TABLE `BusinessBranch` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `businessId` INTEGER NULL,
+    `id` VARCHAR(191) NOT NULL,
+    `businessId` VARCHAR(191) NULL,
     `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
     `state` VARCHAR(191) NOT NULL,
     `city` VARCHAR(191) NOT NULL,
@@ -199,9 +199,9 @@ CREATE TABLE `BusinessBranch` (
 
 -- CreateTable
 CREATE TABLE `BusinessBranchCollaborator` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `isAdmin` BOOLEAN NOT NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -210,9 +210,9 @@ CREATE TABLE `BusinessBranchCollaborator` (
 
 -- CreateTable
 CREATE TABLE `BusinessBranchClient` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -220,9 +220,9 @@ CREATE TABLE `BusinessBranchClient` (
 
 -- CreateTable
 CREATE TABLE `BusinessBranchSupplier` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `userId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -230,10 +230,10 @@ CREATE TABLE `BusinessBranchSupplier` (
 
 -- CreateTable
 CREATE TABLE `Purchase` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `businessBranchPurchaseId` INTEGER NOT NULL,
-    `productId` INTEGER NOT NULL,
-    `productPresentationId` INTEGER NULL,
+    `id` VARCHAR(191) NOT NULL,
+    `businessBranchPurchaseId` VARCHAR(191) NOT NULL,
+    `productId` VARCHAR(191) NOT NULL,
+    `productPresentationId` VARCHAR(191) NULL,
     `unitsOrMeasures` DOUBLE NOT NULL DEFAULT 1.0,
     `price` DOUBLE NOT NULL DEFAULT 0.0,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -243,16 +243,30 @@ CREATE TABLE `Purchase` (
 
 -- CreateTable
 CREATE TABLE `BusinessBranchPurchase` (
-    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `id` VARCHAR(191) NOT NULL,
     `clientName` VARCHAR(191) NULL,
     `clientDNI` VARCHAR(191) NULL,
-    `userId` INTEGER NULL,
-    `businessId` INTEGER NOT NULL,
-    `branchId` INTEGER NOT NULL,
+    `businessRif` VARCHAR(191) NULL,
+    `userId` VARCHAR(191) NULL,
+    `businessId` VARCHAR(191) NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `amountCancelled` DOUBLE NOT NULL,
     `totalAmount` DOUBLE NOT NULL,
     `expiredDate` DATETIME(3) NULL,
     `status` ENUM('pendiente', 'pagado', 'caducado') NOT NULL DEFAULT 'pendiente',
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Setting` (
+    `id` VARCHAR(191) NOT NULL,
+    `key` DOUBLE NOT NULL,
+    `value` DOUBLE NOT NULL,
+    `userId` VARCHAR(191) NULL,
+    `businessId` VARCHAR(191) NOT NULL,
+    `branchId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -346,7 +360,16 @@ ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_productPresentationId_fkey` FORE
 ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
