@@ -8,7 +8,7 @@ interface CreateBusinessInput {
   name: string;
   rif?: string;
   description?: string;
-  ownerId: number;
+  ownerId: string;
   branches: { country: string; state: string; city: string; address: string; phone: string }[];
   logo?: string | null;
 }
@@ -142,7 +142,7 @@ export class BusinessService {
     }
   }
 
-  async delete(id: number) {
+  async delete(id: string) {
     // Verificar si existe antes de eliminar
     const business = await this.prisma.business.findUnique({ where: { id } });
 

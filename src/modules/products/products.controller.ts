@@ -23,7 +23,7 @@ export class ProductsController {
 
   @Get('/')
   async getByFilters(
-    @Query('businessId', ParseIntPipe) businessId = null,
+    @Query('businessId') businessId: string = '',
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -44,7 +44,7 @@ export class ProductsController {
     );
   }
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
   @Post()
@@ -52,11 +52,11 @@ export class ProductsController {
     return this.service.addProduct(dto);
   }
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdateProductDto) {
     return this.service.updateProduct(id, dto);
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.deleteProduct(id);
   }
 }

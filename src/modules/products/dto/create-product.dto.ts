@@ -24,21 +24,21 @@ export class CreateProductDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  brandId?: number;
+  @IsString()
+  @Type(() => String)
+  brandId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  categoryId?: number;
+  @IsString()
+  @Type(() => String)
+  categoryId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  businessId?: number;
+  @IsString()
+  @Type(() => String)
+  businessId?: string;
 
   @ApiPropertyOptional({ type: [CreateProductTagDto] })
   @IsOptional()

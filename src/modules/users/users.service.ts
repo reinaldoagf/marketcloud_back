@@ -92,7 +92,7 @@ export class UsersService {
 
   async findOne(id: string): Promise<UserResponseDto | null> {
     return this.prisma.user.findUnique({
-      where: { id: Number(id) },
+      where: { id: id },
       select: SELECT_FIELDS,
     });
   }

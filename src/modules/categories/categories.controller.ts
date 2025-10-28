@@ -34,11 +34,11 @@ export class CategoriesController {
     return this.service.addCategory(dto);
   }
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCategoryDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
     return this.service.updateCategory(id, dto);
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.deleteCategory(id);
   }
 }

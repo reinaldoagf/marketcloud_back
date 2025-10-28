@@ -1,5 +1,5 @@
 // create-pending.dto.ts
-import { IsInt, IsString, IsNotEmpty, Length, IsOptional, IsDate } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsOptional, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreatePendingDto {
@@ -13,22 +13,22 @@ export class CreatePendingDto {
   @Length(3, 50, { message: 'El mensaje debe tener entre 3 y 50 caracteres' })
   message: string;
 
-  @IsInt()
-  @Type(() => Number)
-  businessId: number;
+  @IsString()
+  @Type(() => String)
+  businessId: string;
 
-  @IsInt()
-  @Type(() => Number)
-  branchId: number;
+  @IsString()
+  @Type(() => String)
+  branchId: string;
 
-  @IsInt()
-  @Type(() => Number)
-  createdById: number;
+  @IsString()
+  @Type(() => String)
+  createdById: string;
 
   @IsOptional()
-  @IsInt()
-  @Type(() => Number)
-  linkedUserId: number;
+  @IsString()
+  @Type(() => String)
+  linkedUserId: string;
 
   @IsOptional()
   @Type(() => Date)

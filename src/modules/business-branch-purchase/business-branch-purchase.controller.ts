@@ -26,8 +26,8 @@ export class BusinessBranchPurchaseController {
 
   @Get()
   getByFilters(
-    @Query('userId', ParseIntPipe) userId: number,
-    @Query('branchId', ParseIntPipe) branchId: number,
+    @Query('userId') userId: string = '',
+    @Query('branchId') branchId: string = '',
     @Query('page') page = 1,
     @Query('pageSize') pageSize = 10,
     @Query('search') search = '',
@@ -50,21 +50,21 @@ export class BusinessBranchPurchaseController {
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.service.deleteById(id);
   }
   // 📊 Obtener resumen de compras por usuario
   @Get('summary')
   async getPurchaseSummary(
-    @Query('businessId', ParseIntPipe) businessId = null,
-    @Query('branchId', ParseIntPipe) branchId = null,
-    @Query('userId', ParseIntPipe) userId = null,
+    @Query('businessId') businessId: string,
+    @Query('branchId') branchId: string,
+    @Query('userId') userId: string,
   ) {
     return this.service.getPurchaseSummaryByFilters(businessId, branchId, userId);
   }
   @Patch(':id')
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() dto: UpdateBusinessBranchPurchaseDto,
   ) {
     return this.service.update(id, dto);

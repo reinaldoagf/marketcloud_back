@@ -1,6 +1,6 @@
 // src/auth/dto/update-auth.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEmail, MinLength } from 'class-validator';
+import { IsOptional, IsString, MinLength } from 'class-validator';
 
 export class UpdateAuthDto {
   @ApiProperty({ required: false })

@@ -2,12 +2,12 @@
 import { PurchaseStatus } from '@prisma/client';
 
 export class BusinessBranchPurchaseResponseDto {
-  id: number;
+  id: string;
   clientName?: string | null;
   clientDNI?: string | null;
-  userId?: number | null;
-  businessId: number;
-  branchId: number;
+  userId?: string | null;
+  businessId: string | null;
+  branchId: string;
   amountCancelled: number;
   totalAmount: number;
   status: PurchaseStatus;
@@ -15,29 +15,29 @@ export class BusinessBranchPurchaseResponseDto {
 
   // Relaciones
   branch?: {
-    id: number;
+    id: string;
     address: string;
-  };
+  } | null;
 
   business?: {
-    id: number;
+    id: string;
     name: string;
-  };
+  } | null;
 
   user?: {
-    id: number;
+    id: string;
     name: string;
     email: string;
   } | null;
 
   purchases?: {
-    id: number;
-    productId: number;
-    productPresentationId?: number | null;
+    id: string;
+    productId: string;
+    productPresentationId?: string | null;
     unitsOrMeasures: number;
     price: number;
     createdAt: Date;
-    product?: { id: number; name: string };
-    productPresentation?: { id: number; measurementQuantity: number; packing: string | null; flavor?: string | null } | null;
+    product?: { id: string; name: string };
+    productPresentation?: { id: string; measurementQuantity: number; packing: string | null; flavor?: string | null } | null;
   }[];
 }

@@ -3,7 +3,7 @@ import { ProductResponseDto } from '../../products/dto/product-response.dto';
 import { ProductPresentationDto } from '../../products/dto/product-response.dto';
 
 export class ProductStockResponseDto {
-  id: number;
+  id: string;
   units: number;
   priceByUnit: number | null;
   availableQuantity: number | null;
@@ -13,13 +13,13 @@ export class ProductStockResponseDto {
   purchasePricePerUnit: number;
   profitPercentage: number;
   returnOnInvestment: number;
-  productPresentationId?: number | null;
+  productPresentationId?: string | null;
   productPresentation?: ProductPresentationDto | null;
-  productId: number | null;
+  productId: string | null;
   product: ProductResponseDto | null;
-  branchId: number;
+  branchId: string;
   branch: {
-    id: number;
+    id: string;
     country: string;
     state: string;
     city: string;

@@ -9,8 +9,8 @@ export class PendingsController {
   constructor(private readonly service: PendingsService) {}
   @Get('/')
   async getByFilters(
-    @Query('businessId', ParseIntPipe) businessId = null,
-    @Query('branchId', ParseIntPipe) branchId = null,
+    @Query('businessId') businessId: string = '',
+    @Query('branchId') branchId: string = '',
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -36,7 +36,7 @@ export class PendingsController {
     return this.service.addPending(dto);
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.deletePending(id);
   }
 }

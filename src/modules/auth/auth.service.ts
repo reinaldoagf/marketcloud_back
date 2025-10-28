@@ -121,7 +121,7 @@ export class AuthService {
     return { access_token: token, user: userSafe };
   }
 
-  async updateProfile(userId: number, dto: UpdateAuthDto) {
+  async updateProfile(userId: string, dto: UpdateAuthDto) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { password: true },
@@ -171,7 +171,7 @@ export class AuthService {
     return { message: 'Profile updated successfully', user: updated };
   }
 
-  signToken(userId: number, email: string) {
+  signToken(userId: string, email: string) {
     return this.jwtService.sign({ sub: userId, email });
   }
 }

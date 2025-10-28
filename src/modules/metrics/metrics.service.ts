@@ -6,9 +6,9 @@ export class MetricsService {
   constructor(private prisma: PrismaService) {}
 
   async getPurchasesByCategory(
-    businessId?: number | null,
-    branchId?: number | null,
-    userId?: number | null,
+    businessId?: string | null,
+    branchId?: string | null,
+    userId?: string | null,
     startDate?: string,
     endDate?: string,
   ) {
@@ -26,9 +26,9 @@ export class MetricsService {
     if (end) where.createdAt.lte = end;
 
     // Filtros opcionales
-    if (userId) where.businessBranchPurchase.userId = userId;
+    if (userId?.length) where.businessBranchPurchase.userId = userId;
     if (businessId) where.businessBranchPurchase.businessId = businessId;
-    if (branchId) where.businessBranchPurchase.branchId = branchId;
+    if (branchId?.length) where.businessBranchPurchase.branchId = branchId;
 
     // Eliminamos propiedades vacías si no se usaron
     if (!Object.keys(where.createdAt).length) delete where.createdAt;
@@ -75,7 +75,7 @@ export class MetricsService {
     return result;
   }
 
-  async getInvestmentsByCategory(businessId?: number, branchId?: number) {
+  async getInvestmentsByCategory(businessId?: string, branchId?: string) {
     // 1️⃣ Obtener todos los stocks con su producto y categoría
     const stocks = await this.prisma.productStock.findMany({
       where: {
@@ -140,7 +140,7 @@ export class MetricsService {
               categoryId === '0'
                 ? { id: 0, name: 'Sin categoría' }
                 : await this.prisma.productCategory.findUnique({
-                    where: { id: Number(categoryId) },
+                    where: { id: categoryId },
                     select: { id: true, name: true },
                   });
 
@@ -153,7 +153,7 @@ export class MetricsService {
         );
 
         return {
-          branchId: Number(branchId),
+          branchId: branchId,
           categories: categoryEntries,
         };
       }),

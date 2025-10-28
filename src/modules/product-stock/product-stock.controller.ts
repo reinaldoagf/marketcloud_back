@@ -25,7 +25,7 @@ export class ProductStockController {
 
   @Get('/')
   async getByFilters(
-    @Query('branchId', ParseIntPipe) branchId,
+    @Query('branchId') branchId = '',
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -45,19 +45,19 @@ export class ProductStockController {
   }
 
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductStockDto) {
+  update(@Param('id') id: string, @Body() dto: UpdateProductStockDto) {
     return this.service.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id') id: string) {
     return this.service.remove(id);
   }
 
   @Delete(':branchId/:productId')
   deleteProductStockByBranch(
-    @Param('branchId', ParseIntPipe) branchId: number,
-    @Param('productId', ParseIntPipe) productId: number,
+    @Param('branchId') branchId: string,
+    @Param('productId') productId: string,
   ) {
     return this.service.deleteProductStockByBranch(branchId, productId);
   }

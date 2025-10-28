@@ -2,14 +2,14 @@
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 
 export class PendingResponseDto {
-  id: number;
+  id: string;
   title: string;
   message: string;
   createdBy: UserResponseDto | null;
   linkedUser: UserResponseDto | null;
   eventDate: Date | null;
   branch: {
-    id: number;
+    id: string;
     country: string;
     state: string;
     city: string;

@@ -1,13 +1,13 @@
 // create-client.dto.ts
-import { IsInt } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateClientDto {
-  @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
-  userId: number;
+  @IsString()
+  @Type(() => String)
+  userId: string;
 
-  @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
-  branchId: number;
+  @IsString()
+  @Type(() => String)
+  branchId: string;
 }

@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateProductStockDto {
   @IsInt()
@@ -41,12 +41,12 @@ export class CreateProductStockDto {
   returnOnInvestment: number;
 
   @IsOptional()
-  @IsInt()
-  productPresentationId?: number;
+  @IsString()
+  productPresentationId?: string;
 
-  @IsInt()
-  productId: number;
+  @IsString()
+  productId: string;
 
-  @IsInt()
-  branchId: number;
+  @IsString()
+  branchId: string;
 }

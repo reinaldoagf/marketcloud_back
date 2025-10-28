@@ -14,7 +14,7 @@ const SELECT_FIELDS = {
 
 @Injectable()
 export class BrandsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private service: PrismaService) {}
 
   async getByFilters(
     page = 1,
@@ -49,8 +49,8 @@ export class BrandsService {
     }
 
     const [total, data] = await Promise.all([
-      this.prisma.productBrand.count({ where }),
-      this.prisma.productBrand.findMany({
+      this.service.productBrand.count({ where }),
+      this.service.productBrand.findMany({
         where,
         select: SELECT_FIELDS,
         orderBy: { createdAt: 'desc' },
@@ -70,30 +70,30 @@ export class BrandsService {
 
   async addBrand(dto: CreateBrandDto) {
     // Crear el colaborador
-    return this.prisma.productBrand.create({
+    return this.service.productBrand.create({
       data: {
         name: dto.name,
       },
     });
   }
 
-  async updateBrand(id: number, dto: UpdateBrandDto) {
-    const brand = await this.prisma.productBrand.findUnique({ where: { id } });
+  async updateBrand(id: string, dto: UpdateBrandDto) {
+    const brand = await this.service.productBrand.findUnique({ where: { id } });
 
     if (!brand) {
       throw new NotFoundException(`Brand with ID ${id} not found`);
     }
 
-    return this.prisma.productBrand.update({
+    return this.service.productBrand.update({
       where: { id },
       data: {
         name: dto.name ?? brand.name,
       },
     });
   }
-  async deleteBrand(id: number) {
+  async deleteBrand(id: string) {
     // Verificar si existe antes de eliminar
-    const brand = await this.prisma.productBrand.findUnique({
+    const brand = await this.service.productBrand.findUnique({
       where: { id },
     });
 
@@ -101,7 +101,7 @@ export class BrandsService {
       throw new NotFoundException(`Brand with ID ${id} not found`);
     }
 
-    return this.prisma.productBrand.delete({
+    return this.service.productBrand.delete({
       where: { id },
     });
   }

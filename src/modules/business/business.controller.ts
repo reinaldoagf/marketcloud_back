@@ -60,7 +60,6 @@ export class BusinessController {
     }),
   ) // opcional, si envías archivo "logo"
   async create(@Body() body: CreateBusinessDto, @UploadedFile() file?: Express.Multer.File) {
-    const ownerId = Number(body.ownerId);
 
     let branches: {
       country: string;
@@ -81,13 +80,13 @@ export class BusinessController {
       name: body.name,
       rif: body.rif,
       description: body.description ?? '',
-      ownerId,
+      ownerId: body.ownerId,
       branches,
       logo: file ? file.filename : null,
     });
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
 }

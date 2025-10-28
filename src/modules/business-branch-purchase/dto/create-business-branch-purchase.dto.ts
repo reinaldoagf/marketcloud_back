@@ -14,12 +14,12 @@ import { Type } from 'class-transformer';
 import { PurchaseStatus } from '@prisma/client';
 
 class PurchaseItemDto {
-  @IsInt()
-  productId: number;
+  @IsString()
+  productId: string;
 
   @IsOptional()
-  @IsInt()
-  productPresentationId?: number | null;
+  @IsString()
+  productPresentationId?: string;
 
   @IsNumber()
   @IsPositive() // Optional: further restrict to positive floats
@@ -39,14 +39,14 @@ export class CreateBusinessBranchPurchaseDto {
   clientDNI?: string;
 
   @IsOptional()
-  @IsInt()
-  userId?: number;
+  @IsString()
+  userId?: string;
 
-  @IsInt()
-  businessId: number;
+  @IsString()
+  businessId: string;
 
-  @IsInt()
-  branchId: number;
+  @IsString()
+  branchId: string;
 
   @IsNumber()
   amountCancelled: number;

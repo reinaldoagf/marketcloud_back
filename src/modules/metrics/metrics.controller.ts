@@ -1,4 +1,4 @@
-import { Controller, Get, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { MetricsService } from './metrics.service';
 
 @Controller('metrics')
@@ -7,8 +7,8 @@ export class MetricsController {
 
   @Get('purchases-by-category')
   async getPurchasesByCategory(
-    @Query('businessId', ParseIntPipe) businessId = null,
-    @Query('branchId', ParseIntPipe) branchId = null,
+    @Query('businessId') businessId: string = '',
+    @Query('branchId') branchId: string = '',
     @Query('userId') userId: string,
     @Query('startDate') startDate: string,
     @Query('endDate') endDate: string,
@@ -16,7 +16,7 @@ export class MetricsController {
     return this.service.getPurchasesByCategory(
       businessId,
       branchId,
-      Number(userId),
+      userId,
       startDate,
       endDate,
     );
@@ -28,8 +28,8 @@ export class MetricsController {
     @Query('branchId') branchId?: string,
   ) {
     return this.service.getInvestmentsByCategory(
-      businessId ? Number(businessId) : undefined,
-      branchId ? Number(branchId) : undefined,
+      businessId ? businessId : '',
+      branchId ? branchId : '',
     );
   }
 }

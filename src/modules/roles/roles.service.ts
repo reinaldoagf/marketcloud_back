@@ -49,7 +49,7 @@ export class RolesService {
     };
   }
 
-  async getById(id: number) {
+  async getById(id: string) {
     const role = await this.prisma.role.findUnique({
       where: { id },
       select: SELECT_FIELDS,
@@ -113,7 +113,7 @@ export class RolesService {
     });
   }
   // ✅ Actualizar rol
-  async update(id: number, dto: UpdateRoleDto) {
+  async update(id: string, dto: UpdateRoleDto) {
     const { name, key, pages = [], permissions = [] } = dto;
 
     const existing = await this.prisma.role.findUnique({ where: { id } });
@@ -172,7 +172,7 @@ export class RolesService {
     }
   }
   // ✅ Eliminar un rol con dependencias
-  async delete(id: number) {
+  async delete(id: string) {
     try {
       // 🔹 Verificar si el rol existe
       const role = await this.prisma.role.findUnique({ where: { id } });
@@ -199,7 +199,7 @@ export class RolesService {
     }
   }
 
-  async updatePermissions(id: number, permissionIds: number[]) {
+  async updatePermissions(id: string, permissionIds: string[]) {
     try {
       const role = await this.prisma.role.update({
         where: { id },
@@ -223,7 +223,7 @@ export class RolesService {
     }
   }
 
-  async updatePages(id: number, pages: string[]) {
+  async updatePages(id: string, pages: string[]) {
     try {
       const role = await this.prisma.role.update({
         where: { id },

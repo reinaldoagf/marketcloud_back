@@ -91,8 +91,8 @@ export class BusinessBranchPurchaseService {
   }
 
   async getByFilters(
-    userId: number,
-    branchId: number,
+    userId: string = '',
+    branchId: string = '',
     page = 1,
     pageSize = 10,
     search = '',
@@ -104,13 +104,13 @@ export class BusinessBranchPurchaseService {
     const skip = (page - 1) * pageSize;
     const where: Prisma.BusinessBranchPurchaseWhereInput = {};
 
-    if (userId) {
+    if (userId?.length) {
       const user = await this.prisma.user.findUnique({ where: { id: userId } });
       if (!user) throw new NotFoundException(`User with ID ${userId} not found`);
       where.userId = userId;
     }
 
-    if (branchId) {
+    if (branchId?.length) {
       const branch = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
       if (!branch) throw new NotFoundException(`Branch with ID ${branchId} not found`);
       where.branchId = branchId;
@@ -164,7 +164,7 @@ export class BusinessBranchPurchaseService {
     };
   }
 
-  async deleteById(id: number) {
+  async deleteById(id: string) {
     const existing = await this.prisma.businessBranchPurchase.findUnique({
       where: { id },
       include: { purchases: true },
@@ -181,9 +181,9 @@ export class BusinessBranchPurchaseService {
   }
 
   async getPurchaseSummaryByFilters(
-    businessId?: number | null,
-    branchId?: number | null,
-    userId?: number | null,
+    businessId?: string,
+    branchId?: string,
+    userId?: string,
   ) {
     if (!userId && !businessId && !branchId) {
       throw new BadRequestException(
@@ -194,9 +194,9 @@ export class BusinessBranchPurchaseService {
     // 🔹 Construimos filtros dinámicos
     const where: any = {};
 
-    if (userId) where.userId = userId;
+    if (userId?.length) where.userId = userId;
     if (businessId) where.businessId = businessId;
-    if (branchId) where.branchId = branchId;
+    if (branchId?.length) where.branchId = branchId;
 
     // 🔹 Buscamos las compras filtradas
     const purchases = await this.prisma.businessBranchPurchase.findMany({
@@ -270,7 +270,7 @@ export class BusinessBranchPurchaseService {
     };
   }
 
-  async update(id: number, dto: UpdateBusinessBranchPurchaseDto) {
+  async update(id: string, dto: UpdateBusinessBranchPurchaseDto) {
     const purchase = await this.prisma.businessBranchPurchase.findUnique({ where: { id } });
 
     if (!purchase) {

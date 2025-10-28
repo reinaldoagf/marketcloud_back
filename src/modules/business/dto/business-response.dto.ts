@@ -1,6 +1,6 @@
 // dto/business-response.dto.ts
 export class BusinessResponseDto {
-  id: number;
+  id: string;
   name: string;
   createdAt: Date;
 }

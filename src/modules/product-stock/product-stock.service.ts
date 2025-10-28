@@ -31,7 +31,7 @@ export class ProductStockService {
 
   // ✅ Obtener por filtros
   async getByFilters(
-    branchId: number,
+    branchId: string,
     page = 1,
     pageSize = 10,
     search = '',
@@ -44,7 +44,7 @@ export class ProductStockService {
     // Construimos los filtros dinámicamente
     const where: Prisma.ProductStockWhereInput = {};
 
-    if (branchId) {
+    if (branchId?.length) {
       const existing = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
       if (!existing) throw new NotFoundException(`BusinessBranch with ID ${branchId} not found`);
       where.branchId = branchId;
@@ -143,7 +143,7 @@ export class ProductStockService {
   }
 
   // ✅ Actualizar registro
-  async update(id: number, dto: UpdateProductStockDto) {
+  async update(id: string, dto: UpdateProductStockDto) {
     const existing = await this.prisma.productStock.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`ProductStock with ID ${id} not found`);
     try {
@@ -163,7 +163,7 @@ export class ProductStockService {
   }
 
   // ✅ Eliminar registro
-  async remove(id: number) {
+  async remove(id: string) {
     const existing = await this.prisma.productStock.findUnique({ where: { id } });
     if (!existing) throw new NotFoundException(`ProductStock with ID ${id} not found`);
 
@@ -172,7 +172,7 @@ export class ProductStockService {
   }
 
   // ✅ Eliminar registros
-  async deleteProductStockByBranch(branchId: number, productId: number) {
+  async deleteProductStockByBranch(branchId: string, productId: string) {
     const branch = await this.prisma.businessBranch.findUnique({ where: { id: branchId } });
     if (!branch) throw new NotFoundException(`BusinessBranch with ID ${branchId} not found`);
 

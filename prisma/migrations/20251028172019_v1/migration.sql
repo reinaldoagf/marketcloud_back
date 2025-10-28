@@ -53,7 +53,7 @@ CREATE TABLE `User` (
     `country` VARCHAR(191) NOT NULL DEFAULT 'venezuela',
     `state` VARCHAR(191) NOT NULL,
     `city` VARCHAR(191) NOT NULL,
-    `businessId` INTEGER NULL,
+    `businessId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     UNIQUE INDEX `User_email_key`(`email`),

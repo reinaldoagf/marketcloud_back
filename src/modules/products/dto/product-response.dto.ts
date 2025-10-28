@@ -5,13 +5,13 @@ import { CategoryResponseDto } from '../../categories/dto/category-response.dto'
 import { BusinessResponseDto } from '../../business/dto/business-response.dto';
 
 export class ProductTagDto {
-  id: number;
+  id: string;
   tag: string;
   createdAt: Date;
 }
 
 export class ProductPresentationDto {
-  id: number;
+  id: string;
   flavor?: string | null;
   measurementQuantity: number;
   packing: ProductPacking;
@@ -19,16 +19,16 @@ export class ProductPresentationDto {
 }
 
 export class ProductResponseDto {
-  id: number;
+  id: string;
   name: string;
   status: ProductStatus;
   priceCalculation: PriceCalculation | null;
   unitMeasurement: UnitMeasurement | null;
-  brandId?: number | null;
+  brandId?: string | null;
   brand?: BrandResponseDto | null;
-  categoryId?: number | null;
+  categoryId?: string | null;
   category?: CategoryResponseDto | null;
-  businessId?: number | null;
+  businessId?: string | null;
   business?: BusinessResponseDto | null;
   tags?: ProductTagDto[];
   presentations?: ProductPresentationDto[];

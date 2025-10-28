@@ -54,7 +54,7 @@ export class ProductsService {
   constructor(private prisma: PrismaService) {}
 
   async getByFilters(
-    businessId?: number | null,
+    businessId?: string | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -119,7 +119,7 @@ export class ProductsService {
   }
 
   // ✅ Buscar uno por ID
-  async findOne(id: number) {
+  async findOne(id: string) {
     const product = await this.prisma.product.findUnique({
       where: { id },
       select: SELECT_FIELDS,
@@ -166,7 +166,7 @@ export class ProductsService {
     }
   }
 
-  async updateProduct(id: number, dto: UpdateProductDto) {
+  async updateProduct(id: string, dto: UpdateProductDto) {
     try {
       const product = await this.prisma.product.update({
         where: { id },
@@ -214,7 +214,7 @@ export class ProductsService {
     }
   }
 
-  async deleteProduct(id: number) {
+  async deleteProduct(id: string) {
     // Verificar si existe antes de eliminar
     const product = await this.prisma.product.findUnique({
       where: { id },

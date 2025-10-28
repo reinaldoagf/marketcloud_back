@@ -77,7 +77,7 @@ export class CategoriesService {
     });
   }
 
-  async updateCategory(id: number, dto: UpdateCategoryDto) {
+  async updateCategory(id: string, dto: UpdateCategoryDto) {
     const category = await this.prisma.productCategory.findUnique({ where: { id } });
 
     if (!category) {
@@ -91,7 +91,7 @@ export class CategoriesService {
       },
     });
   }
-  async deleteCategory(id: number) {
+  async deleteCategory(id: string) {
     // Verificar si existe antes de eliminar
     const category = await this.prisma.productCategory.findUnique({
       where: { id },

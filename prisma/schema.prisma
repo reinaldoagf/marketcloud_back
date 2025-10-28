@@ -116,7 +116,7 @@ model User {
   state                 String
   city                  String
 
-  businessId            Int?
+  businessId            String?
   // Relación opcional con Business
   business              Business?       @relation("BusinessOwner")
 

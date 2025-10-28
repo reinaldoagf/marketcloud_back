@@ -9,7 +9,7 @@ import { PaginatedSupplierResponseDto } from './dto/paginated-supplier-response.
 export class SuppliersService {
   constructor(private prisma: PrismaService) {}
   async getByFilters(
-    businessId?: number | null,
+    businessId?: string | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -146,7 +146,7 @@ export class SuppliersService {
       },
     });
   }
-  async deleteSupplier(id: number) {
+  async deleteSupplier(id: string) {
     // Verificar si existe antes de eliminar
     const supplier = await this.prisma.businessBranchSupplier.findUnique({
       where: { id },

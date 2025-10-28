@@ -1,15 +1,15 @@
 // create-collaborator.dto.ts
-import { IsInt, IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class CreateCollaboratorDto {
-  @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
-  userId: number;
+  @IsString()
+  @Type(() => String) // 🔹 convierte automáticamente a número
+  userId: string;
 
-  @IsInt()
-  @Type(() => Number) // 🔹 convierte automáticamente a número
-  branchId: number;
+  @IsString()
+  @Type(() => String) // 🔹 convierte automáticamente a número
+  branchId: string;
 
   @IsBoolean()
   @IsOptional()

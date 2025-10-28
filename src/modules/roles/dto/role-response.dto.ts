@@ -1,5 +1,5 @@
 export class RoleResponseDto {
-  id: number;
+  id: string;
   key: string;
   name: string;
   createdAt: Date;

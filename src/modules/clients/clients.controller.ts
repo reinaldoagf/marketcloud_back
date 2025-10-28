@@ -9,7 +9,7 @@ export class ClientsController {
   constructor(private readonly service: ClientsService) {}
   @Get('/')
   async getByFilters(
-    @Query('businessId', ParseIntPipe) businessId = null,
+    @Query('businessId') businessId: string = '',
     @Query('page', ParseIntPipe) page = '1',
     @Query('size', ParseIntPipe) pageSize = '10',
     @Query('search') search = '',
@@ -34,7 +34,7 @@ export class ClientsController {
     return this.service.addClient(dto);
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.deleteClient(id);
   }
 }

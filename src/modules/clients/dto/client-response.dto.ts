@@ -2,10 +2,10 @@
 import { UserResponseDto } from '../../users/dto/user-response.dto';
 
 export class ClientResponseDto {
-  id: number;
+  id: string;
   user: UserResponseDto;
   branch: {
-    id: number;
+    id: string;
     country: string;
     state: string;
     city: string;

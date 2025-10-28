@@ -1,6 +1,6 @@
 // dto/brand-response.dto.ts
 export class BrandResponseDto {
-  id: number;
+  id: string;
   name: string;
   createdAt: Date;
 }

@@ -9,7 +9,7 @@ import { PaginatedClientResponseDto } from './dto/paginated-client-response.dto'
 export class ClientsService {
   constructor(private prisma: PrismaService) {}
   async getByFilters(
-    businessId?: number | null,
+    businessId?: string | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -146,7 +146,7 @@ export class ClientsService {
       },
     });
   }
-  async deleteClient(id: number) {
+  async deleteClient(id: string) {
     // Verificar si existe antes de eliminar
     const client = await this.prisma.businessBranchClient.findUnique({
       where: { id },

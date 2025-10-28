@@ -2,14 +2,14 @@
 import { UserStatus } from '@prisma/client';
 
 export class UserResponseDto {
-  id: number;
+  id: string;
   name: string;
   email: string;
   status: UserStatus;
-  createdAt: Date;
-  roleId: number | null;
   country: string | null;
   state: string | null;
   city: string | null;
-  businessId: number | null;
+  roleId: string | null;
+  businessId: string | null;
+  createdAt: Date;
 }

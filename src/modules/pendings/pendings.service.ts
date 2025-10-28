@@ -9,8 +9,8 @@ import { CreatePendingDto } from './dto/create-pending.dto';
 export class PendingsService {
   constructor(private prisma: PrismaService) {}
   async getByFilters(
-    businessId?: number | null,
-    branchId?: number | null,
+    businessId?: string | null,
+    branchId?: string | null,
     page = 1,
     pageSize = 10,
     search = '',
@@ -148,7 +148,7 @@ export class PendingsService {
     });
   }
 
-  async deletePending(id: number) {
+  async deletePending(id: string) {
     // Verificar si existe antes de eliminar
     const client = await this.prisma.pending.findUnique({
       where: { id },

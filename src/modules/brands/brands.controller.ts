@@ -34,11 +34,11 @@ export class BrandsController {
     return this.service.addBrand(dto);
   }
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateBrandDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdateBrandDto) {
     return this.service.updateBrand(id, dto);
   }
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.deleteBrand(id);
   }
 }

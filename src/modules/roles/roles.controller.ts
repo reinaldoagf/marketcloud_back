@@ -20,7 +20,7 @@ export class RolesController {
   }
 
   @Get(':id')
-  async getById(@Param('id', ParseIntPipe) id: number) {
+  async getById(@Param('id') id: string) {
     return this.service.getById(id);
   }
 
@@ -30,20 +30,20 @@ export class RolesController {
   }
 
   @Put(':id')
-  async update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateRoleDto) {
+  async update(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
     return this.service.update(id, dto);
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id') id: string) {
     return this.service.delete(id);
   }
 
   // 🔹 Asignar / actualizar permisos
   @Post(':id/permissions')
   async updatePermissions(
-    @Param('id', ParseIntPipe) id: number,
-    @Body('permissionIds') permissionIds: number[],
+    @Param('id') id: string,
+    @Body('permissionIds') permissionIds: string[],
   ) {
     return this.service.updatePermissions(id, permissionIds);
   }
@@ -51,7 +51,7 @@ export class RolesController {
   // 🔹 Asignar / actualizar páginas
   @Post(':id/pages')
   async updatePages(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body('pages') pages: string[],
   ) {
     return this.service.updatePages(id, pages);
