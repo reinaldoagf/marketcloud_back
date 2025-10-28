@@ -1,0 +1,53 @@
+version: '3.9'
+
+services:
+  # 🟢 Servicio de base de datos PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: marketcloud_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-marketcloud_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - marketcloud_network
+
+  # 🟡 Servicio principal de NestJS
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: marketcloud_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-marketcloud_db}?schema=public
+      PORT: 3000
+    command: >
+      sh -c "
+        npx prisma generate &&
+        npx prisma migrate deploy &&
+        npm run seed &&
+        npm run start:prod
+      "
+    networks:
+      - marketcloud_network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+networks:
+  marketcloud_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
