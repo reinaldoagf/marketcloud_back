@@ -14,7 +14,7 @@ async function main(): Promise<void> {
   const passwordPlain = '12345678';
   const hashedPassword: string = await bcrypt.hash(passwordPlain, 10);
 
-  const usersData = Array.from({ length: 5 }).map((_, index) => ({
+  /* const usersData = Array.from({ length: 5 }).map((_, index) => ({
     email: `user${index + 1}@test.com`,
     name: `User ${index + 1}`,
     username: `username${index + 1}`,
@@ -28,7 +28,7 @@ async function main(): Promise<void> {
   await prisma.user.createMany({
     data: usersData,
     skipDuplicates: true, // evita errores si corres varias veces
-  });
+  }); */
 
   await prisma.user.createMany({
     data: [
@@ -48,7 +48,7 @@ async function main(): Promise<void> {
   });
 
   console.log('✅ Usuarios creados con contraseña encriptada');
-
+/* 
   await prisma.permission.createMany({
     data: [
       {
@@ -110,7 +110,7 @@ async function main(): Promise<void> {
     skipDuplicates: true,
   });
 
-  console.log('✅ Categorías creadas exitosamente');
+  console.log('✅ Categorías creadas exitosamente'); */
 }
 
 main()
