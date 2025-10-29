@@ -1,15 +1,15 @@
-version: "3.9"
+version: '3.8'
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql:8.0
     container_name: marketcloud_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: marketcloud_db
-      MYSQL_USER: servimarket
-      MYSQL_PASSWORD: servimarket102025
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-marketcloud_db}
+      MYSQL_USER: ${MYSQL_USER:-marketcloud}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-marketcloud123}
     ports:
       - "3306:3306"
     volumes:
@@ -21,7 +21,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: marketcloud_backend
     restart: always
     ports:
       - "3000:3000"
@@ -29,27 +28,20 @@ services:
       - mysql
     environment:
       NODE_ENV: production
-      DATABASE_URL: mysql://root:root@mysql:3306/marketcloud_db
+      DATABASE_URL: mysql://${MYSQL_USER:-marketcloud}:${MYSQL_PASSWORD:-marketcloud123}@mysql:3306/${MYSQL_DATABASE:-marketcloud_db}
       PORT: 3000
     command: >
       sh -c "
-      npm run build && 
-        until nc -z mysql 3306; do
-          echo '⏳ Esperando a MySQL...';
-          sleep 2;
-        done;
-        echo '✅ MySQL listo. Iniciando migraciones...';
-      sleep 10 &&
-      npx prisma generate &&
-      npx prisma migrate deploy &&
-      npm run seed &&
-      npm run start:prod
+        npx prisma generate &&
+        npx prisma migrate deploy &&
+        npm run seed &&
+        npm run start:prod
       "
+    networks:
+      - marketcloud_network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    networks:
-      - marketcloud_network
 
 networks:
   marketcloud_network:
