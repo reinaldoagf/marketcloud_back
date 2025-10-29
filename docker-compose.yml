@@ -1,16 +1,13 @@
 version: '3.9'
 
 services:
-  # 🟢 Servicio de base de datos MySQL
   mysql:
-    image: mysql:8.0
+    image: mysql:8
     container_name: marketcloud_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-marketcloud_db}
-      MYSQL_USER: ${MYSQL_USER:-marketcloud}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-marketcloud123}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: marketcloud_db
     ports:
       - "3306:3306"
     volumes:
@@ -18,7 +15,6 @@ services:
     networks:
       - marketcloud_network
 
-  # 🟡 Servicio principal de NestJS
   backend:
     build:
       context: .
@@ -31,7 +27,7 @@ services:
       - mysql
     environment:
       NODE_ENV: production
-      DATABASE_URL: mysql://${MYSQL_USER:-marketcloud}:${MYSQL_PASSWORD:-marketcloud123}@mysql:3306/${MYSQL_DATABASE:-marketcloud_db}
+      DATABASE_URL: mysql://root:root@mysql:3306/marketcloud_db
       PORT: 3000
     command: >
       sh -c "
@@ -40,11 +36,11 @@ services:
         npm run seed &&
         npm run start:prod
       "
-    networks:
-      - marketcloud_network
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    networks:
+      - marketcloud_network
 
 networks:
   marketcloud_network:
