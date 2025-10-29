@@ -31,10 +31,11 @@ services:
       PORT: 3000
     command: >
       sh -c "
-        npx prisma generate &&
-        npx prisma migrate deploy &&
-        npm run seed &&
-        npm run start:prod
+      sleep 10 &&
+      npx prisma generate &&
+      npx prisma migrate deploy &&
+      npm run seed &&
+      npm run start:prod
       "
     volumes:
       - .:/usr/src/app
