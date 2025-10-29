@@ -12,29 +12,36 @@ export class MetricsService {
     startDate?: string,
     endDate?: string,
   ) {
-    const start = startDate ? new Date(startDate) : undefined;
-    const end = endDate ? new Date(endDate) : undefined;
+    const currentYear = new Date().getFullYear();
+    const months = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
 
-    // 🔹 Construimos filtros dinámicos para mayor flexibilidad
+    const start = startDate ? new Date(startDate) : new Date(`${currentYear}-01-01`);
+    const end = endDate ? new Date(endDate) : new Date(`${currentYear}-12-31`);
+
+    // 🔹 Filtros dinámicos
     const where: any = {
-      createdAt: {},
+      createdAt: { gte: start, lte: end },
       businessBranchPurchase: {},
     };
 
-    // Filtro por fechas
-    if (start) where.createdAt.gte = start;
-    if (end) where.createdAt.lte = end;
-
-    // Filtros opcionales
     if (userId?.length) where.businessBranchPurchase.userId = userId;
     if (businessId) where.businessBranchPurchase.businessId = businessId;
     if (branchId?.length) where.businessBranchPurchase.branchId = branchId;
 
-    // Eliminamos propiedades vacías si no se usaron
-    if (!Object.keys(where.createdAt).length) delete where.createdAt;
-    if (!Object.keys(where.businessBranchPurchase).length) delete where.businessBranchPurchase;
-
-    // 1️⃣ Obtener todas las compras del usuario (con filtros aplicados)
+    // 🔹 1️⃣ Obtener todas las compras filtradas
     const purchases = await this.prisma.purchase.findMany({
       where,
       select: {
@@ -43,30 +50,43 @@ export class MetricsService {
         createdAt: true,
         product: {
           select: {
-            category: { select: { name: true } },
+            category: { select: { id: true, name: true } },
           },
         },
       },
     });
 
-    // 2️⃣ Agrupamos por mes y categoría
+    // 🔹 2️⃣ Obtener todas las categorías disponibles
+    const allCategories = await this.prisma.productCategory.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
+
+    // 🔹 3️⃣ Inicializamos estructura: meses x categorías con total 0
     const grouped: Record<string, Record<string, number>> = {};
+    for (const month of months) {
+      grouped[month] = {};
+      for (const cat of allCategories) {
+        grouped[month][cat.name] = 0;
+      }
+    }
 
+    // 🔹 4️⃣ Llenamos los totales reales
     purchases.forEach((purchase) => {
-      const month = purchase.createdAt.toLocaleString('es-ES', { month: 'long' });
+      const monthName = purchase.createdAt.toLocaleString('es-ES', { month: 'long' });
+      const monthCapitalized = monthName.charAt(0).toUpperCase() + monthName.slice(1);
       const category = purchase.product?.category?.name ?? 'Sin categoría';
-      const monthCapitalized = month.charAt(0).toUpperCase() + month.slice(1);
 
-      if (!grouped[monthCapitalized]) grouped[monthCapitalized] = {};
+      // Si la categoría no existe aún (por ejemplo "Sin categoría"), la agregamos
       if (!grouped[monthCapitalized][category]) grouped[monthCapitalized][category] = 0;
 
       grouped[monthCapitalized][category] += purchase.unitsOrMeasures * purchase.price;
     });
 
-    // 3️⃣ Formateamos el resultado para el frontend
-    const result = Object.entries(grouped).map(([month, categories]) => ({
+    // 🔹 5️⃣ Formateamos resultado para el frontend
+    const result = months.map((month) => ({
       month,
-      categories: Object.entries(categories).map(([category, total]) => ({
+      categories: Object.entries(grouped[month]).map(([category, total]) => ({
         category,
         total,
       })),
