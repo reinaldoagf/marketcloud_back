@@ -10,9 +10,8 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', '..', 'uploads'), {
     prefix: '/uploads/',
   });
-
   app.enableCors({
-    origin: 'http://localhost:4200', // permite Angular local
+    origin: '*', // o el dominio exacto de tu Angular
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
