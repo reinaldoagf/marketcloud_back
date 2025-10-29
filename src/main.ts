@@ -11,7 +11,10 @@ async function bootstrap() {
     prefix: '/uploads/',
   });
   app.enableCors({
-    origin: '*', // o el dominio exacto de tu Angular
+    origin: [
+      'https://d2x9ou3zmt9m9f.cloudfront.net', // tu frontend
+      'http://localhost:4200', // opcional para desarrollo local
+    ], // o el dominio exacto de tu Angular
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
