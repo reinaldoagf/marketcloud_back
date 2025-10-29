@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { ProductCategory } from '@prisma/client';
 
 @Injectable()
 export class MetricsService {
@@ -94,12 +95,29 @@ export class MetricsService {
 
     return result;
   }
-
   async getInvestmentsByCategory(businessId?: string, branchId?: string) {
+    const currentYear = new Date().getFullYear();
+
+    // 🔹 Array con nombres de los meses
+    const monthNames = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'Junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre',
+    ];
+
     // 1️⃣ Obtener todos los stocks con su producto y categoría
     const stocks = await this.prisma.productStock.findMany({
       where: {
-        branch: branchId ? { id: branchId, businessId } : { businessId }, // si hay branchId, filtramos ambos
+        branch: branchId ? { id: branchId, businessId } : { businessId },
       },
       select: {
         branchId: true,
@@ -109,6 +127,8 @@ export class MetricsService {
         quantityPerMeasure: true,
         totalSellingPrice: true,
         purchasePricePerUnit: true,
+        units: true,
+        createdAt: true,
         product: {
           select: {
             id: true,
@@ -121,20 +141,27 @@ export class MetricsService {
       },
     });
 
-    // 2️⃣ Agrupar y calcular la inversión por categoría y sucursal
-    const grouped: Record<number, Record<number, number>> = {}; // branchId -> categoryId -> inversión
+    // 2️⃣ Obtener todas las categorías (para incluir las sin inversión)
+    const allCategories = await this.prisma.productCategory.findMany({
+      select: { id: true, name: true },
+    });
+
+    // 3️⃣ Agrupar por mes, sucursal y categoría
+    const grouped: Record<number, Record<number, Record<number, number>>> = {};
+    // Estructura: branchId -> month(1-12) -> categoryId -> inversión
 
     for (const stock of stocks) {
       const branchKey = stock.branchId;
       const categoryKey = stock.product?.categoryId ?? 0;
+      const monthKey = new Date(stock.createdAt).getMonth() + 1; // enero=1, diciembre=12
 
       if (!grouped[branchKey]) grouped[branchKey] = {};
-      if (!grouped[branchKey][categoryKey]) grouped[branchKey][categoryKey] = 0;
+      if (!grouped[branchKey][monthKey]) grouped[branchKey][monthKey] = {};
+      if (!grouped[branchKey][monthKey][categoryKey]) grouped[branchKey][monthKey][categoryKey] = 0;
 
       const priceCalculation = stock.product?.priceCalculation ?? null;
       if (priceCalculation) {
         let inversion = 0;
-
         switch (priceCalculation) {
           case 'cantidad':
             inversion = (stock.priceByUnit ?? 0) * (stock.availableQuantity ?? 0);
@@ -143,38 +170,58 @@ export class MetricsService {
             inversion = (stock.priceByMeasurement ?? 0) * (stock.quantityPerMeasure ?? 0);
             break;
           case 'presentacion':
-            inversion = (stock.totalSellingPrice ?? 0) * (stock.purchasePricePerUnit ?? 0);
+            inversion = (stock.totalSellingPrice ?? 0) * (stock.units ?? 0);
             break;
         }
-
-        grouped[branchKey][categoryKey] += inversion;
+        grouped[branchKey][monthKey][categoryKey] += inversion;
       }
     }
 
-    // 3️⃣ Convertimos a un formato amigable para el frontend
+    // 4️⃣ Asegurar que todos los meses y categorías existan (aunque sea con 0 inversión)
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
+
+    // Si no hay datos en grouped (por ejemplo, no hay stocks), igual creamos una estructura base
+    if (Object.keys(grouped).length === 0) {
+      grouped[branchId ?? 0] = {};
+    }
+
     const result = await Promise.all(
-      Object.entries(grouped).map(async ([branchId, categories]) => {
-        const categoryEntries = await Promise.all(
-          Object.entries(categories).map(async ([categoryId, totalInvestment]) => {
-            const category =
-              categoryId === '0'
-                ? { id: 0, name: 'Sin categoría' }
-                : await this.prisma.productCategory.findUnique({
-                    where: { id: categoryId },
-                    select: { id: true, name: true },
-                  });
+      Object.entries(grouped).map(async ([branchKey, monthsData]) => {
+        const monthEntries = await Promise.all(
+          months.map(async (monthNumber) => {
+            const monthName = monthNames[monthNumber - 1]; // obtener nombre
+            const monthCategories = monthsData[monthNumber] || {};
+
+            const categories = await Promise.all(
+              allCategories.map(async (cat: any) => {
+                const totalInvestment = monthCategories[cat.id] ?? 0;
+                return {
+                  categoryId: cat.id,
+                  categoryName: cat.name,
+                  totalInvestment,
+                };
+              }),
+            );
+
+            // También agregamos “Sin categoría”
+            const noCategoryInvestment = monthCategories[0] ?? 0;
+            categories.push({
+              categoryId: 0,
+              categoryName: 'Sin categoría',
+              totalInvestment: noCategoryInvestment,
+            });
 
             return {
-              categoryId: category?.id ?? 0,
-              categoryName: category?.name ?? 'Sin categoría',
-              totalInvestment,
+              month: monthName,
+              categories,
             };
           }),
         );
 
         return {
-          branchId: branchId,
-          categories: categoryEntries,
+          branchId: branchKey,
+          year: currentYear,
+          months: monthEntries,
         };
       }),
     );
