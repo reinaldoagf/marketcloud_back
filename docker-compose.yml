@@ -8,6 +8,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: marketcloud_db
+      MYSQL_USER: servimarket
+      MYSQL_PASSWORD: servimarket102025
     ports:
       - "3306:3306"
     volumes:
