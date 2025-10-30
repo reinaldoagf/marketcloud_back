@@ -23,6 +23,8 @@ const SELECT_FIELDS = {
   subscriptionPlan: true,
   subscriptionDate: true,
   expirationDate: true,
+  owner: true,
+  settings: true,
   createdAt: true,
 };
 
@@ -67,7 +69,7 @@ export class BusinessService {
 
     // 📍 Filtros geográficos: buscamos negocios con branches que coincidan
     const branchFilter: Prisma.BusinessBranchWhereInput = {};
-    
+
     if (country) branchFilter.country = { equals: country };
     if (state) branchFilter.state = { equals: state };
     if (city) branchFilter.city = { equals: city };

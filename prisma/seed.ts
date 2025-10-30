@@ -29,6 +29,13 @@ async function main(): Promise<void> {
     data: usersData,
     skipDuplicates: true, // evita errores si corres varias veces
   }); */
+  await prisma.setting.createMany({
+    data: [{
+      key: 'iva',
+      floatValue: 16
+    }],
+    skipDuplicates: true,
+  });
 
   await prisma.user.createMany({
     data: [

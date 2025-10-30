@@ -337,14 +337,15 @@ model BusinessBranchPurchase {
 }
 
 model Setting {
-  id               String         @id @default(uuid())
-  key              Float
-  value            Float
+  id               String          @id @default(uuid())
+  key              String
+  floatValue       Float?
+  stringValue      String?
   userId           String?
-  user             User?          @relation(fields: [userId], references: [id])
-  businessId       String
-  business         Business       @relation(fields: [businessId], references: [id])
-  branchId         String
-  branch           BusinessBranch @relation(fields: [branchId], references: [id])
-  createdAt        DateTime       @default(now())
+  user             User?           @relation(fields: [userId], references: [id])
+  businessId       String?
+  business         Business?       @relation(fields: [businessId], references: [id])
+  branchId         String?
+  branch           BusinessBranch? @relation(fields: [branchId], references: [id])
+  createdAt        DateTime        @default(now())
 }

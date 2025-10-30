@@ -24,8 +24,9 @@ const SELECT_FIELDS = {
   role: true,
   businessId: true,
   avatar: true,
-  business: { include: { branches: true } },
-  collaborations: { include: { branch: { include: { business: true } } } },
+  settings: true,
+  business: { include: { branches: true, settings: true } },
+  collaborations: { include: { branch: { include: { business: true, settings: true } } } },
 };
 
 @Injectable()
@@ -97,6 +98,7 @@ export class AuthService {
         business: {
           include: {
             branches: true, // Trae todos los branches del business
+            settings: true,
           },
         },
         collaborations: {
@@ -104,6 +106,7 @@ export class AuthService {
             branch: {
               include: {
                 business: true,
+                settings: true,
               },
             },
           },

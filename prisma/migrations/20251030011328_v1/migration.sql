@@ -262,11 +262,12 @@ CREATE TABLE `BusinessBranchPurchase` (
 -- CreateTable
 CREATE TABLE `Setting` (
     `id` VARCHAR(191) NOT NULL,
-    `key` DOUBLE NOT NULL,
-    `value` DOUBLE NOT NULL,
+    `key` VARCHAR(191) NOT NULL,
+    `floatValue` DOUBLE NULL,
+    `stringValue` VARCHAR(191) NULL,
     `userId` VARCHAR(191) NULL,
-    `businessId` VARCHAR(191) NOT NULL,
-    `branchId` VARCHAR(191) NOT NULL,
+    `businessId` VARCHAR(191) NULL,
+    `branchId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
     PRIMARY KEY (`id`)
@@ -369,7 +370,7 @@ ALTER TABLE `BusinessBranchPurchase` ADD CONSTRAINT `BusinessBranchPurchase_bran
 ALTER TABLE `Setting` ADD CONSTRAINT `Setting_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Setting` ADD CONSTRAINT `Setting_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_businessId_fkey` FOREIGN KEY (`businessId`) REFERENCES `Business`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Setting` ADD CONSTRAINT `Setting_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Setting` ADD CONSTRAINT `Setting_branchId_fkey` FOREIGN KEY (`branchId`) REFERENCES `BusinessBranch`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

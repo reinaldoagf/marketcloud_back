@@ -15,7 +15,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { ProductStockModule } from './modules/product-stock/product-stock.module';
 import { BusinessBranchPurchaseModule } from './modules/business-branch-purchase/business-branch-purchase.module';
 import { MetricsModule } from './modules/metrics/metrics.module';
-
+import { SettingsModule } from './modules/settings/settings.module';
 
 @Module({
   imports: [
@@ -35,6 +35,7 @@ import { MetricsModule } from './modules/metrics/metrics.module';
     ProductStockModule,
     BusinessBranchPurchaseModule,
     MetricsModule,
+    SettingsModule,
   ],
   providers: [],
 })
