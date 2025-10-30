@@ -32,14 +32,20 @@ const SELECT_FIELDS = {
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly service: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
   async register(dto: RegisterDto) {
     // verificar email duplicado
-    const exists = await this.prisma.user.findUnique({ where: { email: dto.email } });
-    if (exists) throw new BadRequestException('Email already registered');
+    const emailExist = await this.service.user.findUnique({ where: { email: dto.email } });
+    if (emailExist) throw new BadRequestException('Email already registered');
+
+    const usernameExist = await this.service.user.findUnique({ where: { username: dto.username } });
+    if (usernameExist) throw new BadRequestException('Username already registered');
+
+    const dniExist = await this.service.user.findUnique({ where: { dni: dto.dni } });
+    if (dniExist) throw new BadRequestException('DNI already registered');
 
     const hashed = await bcrypt.hash(dto.password, 10);
 
@@ -55,10 +61,10 @@ export class AuthService {
       status: 'activo', // o venir en dto si lo deseas
     };
 
-    const user = await this.prisma.user.create({ data, select: SELECT_FIELDS });
+    const user = await this.service.user.create({ data, select: SELECT_FIELDS });
 
     // 🔹 Vincular compras existentes por DNI (si las hay)
-    const purchases = await this.prisma.businessBranchPurchase.findMany({
+    const purchases = await this.service.businessBranchPurchase.findMany({
       where: { clientDNI: dto.dni },
       select: { id: true },
     });
@@ -67,7 +73,7 @@ export class AuthService {
       // Ejecutar todas las actualizaciones en paralelo
       await Promise.all(
         purchases.map((p) =>
-          this.prisma.businessBranchPurchase.update({
+          this.service.businessBranchPurchase.update({
             where: { id: p.id },
             data: { userId: user.id },
           }),
@@ -80,7 +86,7 @@ export class AuthService {
   }
 
   async validateUserByEmail(email: string, plainPassword: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.service.user.findUnique({ where: { email } });
     if (!user) return null;
 
     const isMatch = await bcrypt.compare(plainPassword, user.password);
@@ -92,7 +98,7 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.service.user.findUnique({
       where: { email: dto.email },
       include: {
         business: {
@@ -125,7 +131,7 @@ export class AuthService {
   }
 
   async updateProfile(userId: string, dto: UpdateAuthDto) {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.service.user.findUnique({
       where: { id: userId },
       select: { password: true },
     });
@@ -165,7 +171,7 @@ export class AuthService {
       }
     }
 
-    const updated = await this.prisma.user.update({
+    const updated = await this.service.user.update({
       where: { id: userId },
       data,
       select: SELECT_FIELDS,

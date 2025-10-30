@@ -338,7 +338,7 @@ model BusinessBranchPurchase {
 
 model Setting {
   id               String          @id @default(uuid())
-  key              String
+  key              String          @unique
   floatValue       Float?
   stringValue      String?
   userId           String?
