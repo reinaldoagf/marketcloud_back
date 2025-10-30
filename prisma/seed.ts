@@ -11,7 +11,7 @@ const prisma = new PrismaClient({
 });
 
 async function main(): Promise<void> {
-  const passwordPlain = '12345678';
+  const passwordPlain = process.env.USER_DEFAULT_PASSWORD ?? '12345678';
   const hashedPassword: string = await bcrypt.hash(passwordPlain, 10);
 
   /* const usersData = Array.from({ length: 5 }).map((_, index) => ({
