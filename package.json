@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -28,7 +28,7 @@
     "m:run:dev": "export NODE_ENV=develop && npm run prisma:migrate:dev",
     "m:gen": "export NODE_ENV=production && npm run prisma:generate",
     "m:mig": "export NODE_ENV=production && npm run prisma:migrate:deploy && npm run seed",
-    "m:run": "export NODE_ENV=production && pm2 start dist/main.js --name servimarket-api"
+    "m:run": "export NODE_ENV=production && pm2 start dist/src/main.js --name servimarket-api"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",
